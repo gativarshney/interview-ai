@@ -1,20 +1,47 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../../../style/auth.scss'
+import { useAuth } from '../hooks/useAuth'
 
 const Login = () => {
   const navigate = useNavigate()
-  const [formData, setFormData] = useState({ userIdentifier: '', password: '' })
+
+  const {email, setEmail} = useState('')
+  const {password, setPassword} = useState('')
+
+  const { loading, handleLogin } = useAuth()
 
   const handleChange = (event) => {
     const { name, value } = event.target
-    setFormData((current) => ({ ...current, [name]: value }))
+    if (name === 'email') {
+      setEmail(value)
+    } else if (name === 'password') {
+      setPassword(value)
+    }
   }
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log('Login submit', formData)
+    console.log('Login submit', { email, password })
     navigate('/')
+  }
+
+  if(loading){
+    return (
+      <main className="login-page">
+        <section className="login-card" aria-label="Login form">
+          <div className="brand-panel">
+            <span className="brand-mark" aria-hidden="true">
+              IA
+            </span>
+            <div>
+              <p className="brand-label">Interview AI</p>
+              <h1>Loading...</h1>
+            </div>
+          </div>
+          </section>
+      </main>
+    )
   }
 
   return (
@@ -36,12 +63,12 @@ const Login = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="userIdentifier">Email or username</label>
+            <label htmlFor="email">Email</label>
             <input
-              type="text"
-              id="userIdentifier"
-              name="userIdentifier"
-              value={formData.userIdentifier}
+              type="email"
+              id="email"
+              name="email"
+              value={email}
               onChange={handleChange}
               placeholder="you@example.com"
               autoComplete="username"
@@ -54,7 +81,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              value={formData.password}
+              value={password}
               onChange={handleChange}
               placeholder="Enter your password"
               autoComplete="current-password"
