@@ -37,17 +37,84 @@ const interviewReportSchema = z.object({
     title: z.string().describe("The title of the job for which the interview report is generated"),
 })
 
+function normalizeTechnicalQuestions(value) {
+    if (!Array.isArray(value)) return []
+    return value.map((item, index) => {
+        if (typeof item === "object" && item !== null) {
+            return {
+                question: String(item.question || item.text || item.prompt || `Technical question ${index + 1}`),
+                intention: String(item.intention || item.goal || "Assess the candidate's technical reasoning and problem-solving approach."),
+                answer: String(item.answer || item.response || "Provide a concise explanation of the candidate's approach."),
+            }
+        }
+        const text = String(item || `Technical question ${index + 1}`)
+        return {
+            question: text,
+            intention: "Assess the candidate's technical reasoning and problem-solving approach.",
+            answer: "Provide a concise explanation of the candidate's approach.",
+        }
+    })
+}
+
+function normalizeBehavioralQuestions(value) {
+    if (!Array.isArray(value)) return []
+    return value.map((item, index) => {
+        if (typeof item === "object" && item !== null) {
+            return {
+                question: String(item.question || item.text || `Behavioral question ${index + 1}`),
+                intention: String(item.intention || item.goal || "Understand the candidate's teamwork and communication skills."),
+                answer: String(item.answer || item.response || "Describe a relevant experience clearly and concisely."),
+            }
+        }
+        const text = String(item || `Behavioral question ${index + 1}`)
+        return {
+            question: text,
+            intention: "Understand the candidate's teamwork and communication skills.",
+            answer: "Describe a relevant experience clearly and concisely.",
+        }
+    })
+}
+
+function normalizeSkillGaps(value) {
+    if (!Array.isArray(value)) return []
+    return value.map((item, index) => {
+        if (typeof item === "object" && item !== null) {
+            return {
+                skill: String(item.skill || item.name || `Skill gap ${index + 1}`),
+                severity: ["low", "medium", "high"].includes(String(item.severity).toLowerCase()) ? String(item.severity).toLowerCase() : "medium",
+            }
+        }
+        return {
+            skill: String(item || `Skill gap ${index + 1}`),
+            severity: "medium",
+        }
+    })
+}
+
+function normalizePreparationPlan(value) {
+    if (!Array.isArray(value)) return []
+    return value.map((item, index) => {
+        if (typeof item === "object" && item !== null) {
+            return {
+                day: Number.isFinite(Number(item.day)) ? Number(item.day) : index + 1,
+                focus: String(item.focus || item.goal || `Day ${index + 1} focus`),
+                tasks: Array.isArray(item.tasks) ? item.tasks.map(String) : [String(item.task || item.activity || "Review and practice relevant concepts.")],
+            }
+        }
+        return {
+            day: index + 1,
+            focus: String(item || `Day ${index + 1} focus`),
+            tasks: ["Review and practice relevant concepts."],
+        }
+    })
+}
+
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
-
-    const prompt = `Generate an interview report for a candidate with the following details:
-                        Resume: ${resume}
-                        Self Description: ${selfDescription}
-                        Job Description: ${jobDescription}
-                    `
+    const prompt = `You are generating an interview report summary. Return only valid JSON with the following fields:\n- title: the job title from the job description\n- matchScore: an integer from 0 to 100\n- technicalQuestions: an array of technical question objects ({question, intention, answer})\n- behavioralQuestions: an array of behavioral question objects ({question, intention, answer})\n- skillGaps: an array of skill gap objects ({skill, severity})\n- preparationPlan: an array of daily plan objects ({day, focus, tasks})\n\nCandidate resume: ${resume}\nCandidate self-description: ${selfDescription}\nJob description: ${jobDescription}\n\nMake sure every field is present and include real values, not empty arrays. Do not add any text outside the JSON.`
 
     const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash-lite",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: {
             responseMimeType: "application/json",
@@ -55,9 +122,16 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         }
     })
 
-    return JSON.parse(response.text)
+    const result = JSON.parse(response.text)
 
-
+    return {
+        title: result.title || jobDescription.split("\n")[0]?.replace(/^Position\s*[:\-]\s*/i, "")?.trim() || "Untitled Job",
+        matchScore: Number.isFinite(result.matchScore) ? result.matchScore : 0,
+        technicalQuestions: normalizeTechnicalQuestions(result.technicalQuestions),
+        behavioralQuestions: normalizeBehavioralQuestions(result.behavioralQuestions),
+        skillGaps: normalizeSkillGaps(result.skillGaps),
+        preparationPlan: normalizePreparationPlan(result.preparationPlan),
+    }
 }
 
 async function generatePdfFromHtml(htmlContent) {
