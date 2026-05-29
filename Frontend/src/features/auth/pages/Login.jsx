@@ -1,30 +1,23 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../../../style/auth.scss'
-import { useAuth } from '../hooks/useAuth'
+import useAuth from '../hooks/useAuth'
 
 const Login = () => {
   const navigate = useNavigate()
 
-  const {email, setEmail} = useState('')
-  const {password, setPassword} = useState('')
-
   const { loading, handleLogin } = useAuth()
 
-  const handleChange = (event) => {
-    const { name, value } = event.target
-    if (name === 'email') {
-      setEmail(value)
-    } else if (name === 'password') {
-      setPassword(value)
-    }
-  }
+    const [ email, setEmail ] = useState("")
+    const [ password, setPassword ] = useState("")
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    console.log('Login submit', { email, password })
-    navigate('/')
-  }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const success = await handleLogin({email,password})
+        if(success) {
+          navigate('/')
+        }
+    }
 
   if(loading){
     return (
@@ -69,7 +62,7 @@ const Login = () => {
               id="email"
               name="email"
               value={email}
-              onChange={handleChange}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               autoComplete="username"
             />
@@ -82,7 +75,7 @@ const Login = () => {
               id="password"
               name="password"
               value={password}
-              onChange={handleChange}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               autoComplete="current-password"
             />

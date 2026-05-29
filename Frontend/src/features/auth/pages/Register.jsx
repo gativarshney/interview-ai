@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../../../style/auth.scss'
+import useAuth from '../hooks/useAuth'
 
 const Register = () => {
   const navigate = useNavigate()
+  const { loading, handleRegister } = useAuth()
   const [formData, setFormData] = useState({ username: '', email: '', password: '' })
 
   const handleChange = (event) => {
@@ -11,10 +13,30 @@ const Register = () => {
     setFormData((current) => ({ ...current, [name]: value }))
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    console.log('Register submit', formData)
-    navigate('/login')
+    const success = await handleRegister(formData)
+    if (success) {
+      navigate('/')
+    }
+  }
+
+  if (loading) {
+    return (
+      <main className="login-page">
+        <section className="login-card" aria-label="Create account form">
+          <div className="brand-panel">
+            <span className="brand-mark" aria-hidden="true">
+              IA
+            </span>
+            <div>
+              <p className="brand-label">Interview AI</p>
+              <h1>Creating account...</h1>
+            </div>
+          </div>
+        </section>
+      </main>
+    )
   }
 
   return (
