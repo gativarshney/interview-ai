@@ -1,13 +1,56 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import './style/buttons.scss';
+
+:root {
+  color-scheme: light;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #101f33;
+  background-color: #eef2f5;
+  --background: #eef2f5;
+  --surface: #ffffff;
+  --surface-soft: #f5f7f9;
+  --text-primary: #101f33;
+  --text-secondary: #5c7082;
+  --border: rgba(16, 36, 60, 0.12);
+  --primary: #0c3d66;
+  --accent: #0c9c8a;
+  --danger: #d64545;
+  --shadow: rgba(16, 36, 60, 0.08);
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 html,
 body,
-#root{
-    width: 100%;
-    background-color: #161616;
-    color: whitesmoke;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+#root {
+  min-height: 100%;
+  width: 100%;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
 }
