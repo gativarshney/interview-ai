@@ -9,10 +9,13 @@ app.use(cookieParser());
 
 app.use(express.json());
 
+const rawFrontendUrl = (process.env.FRONTEND_URL || "http://localhost:5173").trim();
+const frontendUrl = rawFrontendUrl.replace(/\/+$/, "");
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: frontendUrl,
     credentials: true
-}))
+}));
 
 const authRouter = require("./routes/auth.routes");
 const interviewRouter = require("./routes/interview.routes");
