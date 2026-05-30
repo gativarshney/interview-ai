@@ -15,38 +15,48 @@ function getTitleFromJobDescription(jobDescription) {
 }
 
 async function generateInterViewReportController(req, res) {
+    try {
+        // Accept optional resume file. If present, parse PDF; otherwise use empty resume text.
+        let resumeText = ""
+        if (req.file && req.file.buffer) {
+            const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
+            resumeText = resumeContent.text
+        }
 
-    if (!req.file || !req.file.buffer) {
-        return res.status(400).json({ message: "Resume file is required." })
+        const { selfDescription, jobDescription, title } = req.body
+
+        // Require jobDescription and at least one of selfDescription or resume
+        if (!jobDescription) {
+            return res.status(400).json({ message: "jobDescription is required." })
+        }
+
+        if (!selfDescription && !resumeText) {
+            return res.status(400).json({ message: "Either selfDescription or resume file is required." })
+        }
+
+        const interViewReportByAi = await generateInterviewReport({
+            resume: resumeText,
+            selfDescription,
+            jobDescription
+        })
+
+        const interviewReport = await interviewReportModel.create({
+            user: req.user.id,
+            resume: resumeText,
+            selfDescription,
+            jobDescription,
+            title: title || interViewReportByAi.title || getTitleFromJobDescription(jobDescription),
+            ...interViewReportByAi
+        })
+
+        res.status(201).json({
+            message: "Interview report generated successfully.",
+            interviewReport
+        })
+    } catch (error) {
+        console.error("Error in generateInterViewReportController:", error)
+        res.status(500).json({ message: "Failed to generate interview report. " + error.message })
     }
-
-    const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
-    const { selfDescription, jobDescription, title } = req.body
-
-    if (!selfDescription || !jobDescription) {
-        return res.status(400).json({ message: "selfDescription and jobDescription are required." })
-    }
-
-    const interViewReportByAi = await generateInterviewReport({
-        resume: resumeContent.text,
-        selfDescription,
-        jobDescription
-    })
-
-    const interviewReport = await interviewReportModel.create({
-        user: req.user.id,
-        resume: resumeContent.text,
-        selfDescription,
-        jobDescription,
-        title: title || interViewReportByAi.title || getTitleFromJobDescription(jobDescription),
-        ...interViewReportByAi
-    })
-
-    res.status(201).json({
-        message: "Interview report generated successfully.",
-        interviewReport
-    })
-
 }
 
 /**

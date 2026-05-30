@@ -1,5 +1,5 @@
+@use './style/buttons' as *;
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-@import './style/buttons.scss';
 
 :root {
   color-scheme: light;
@@ -54,3 +54,225 @@ svg {
   display: block;
   max-width: 100%;
 }
+
+// ── Cyberpunk AI Loading Screen Styles ──────────────────────────────────────────
+.premium-loader-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0d1117;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+.cyber-loader-card {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(22, 27, 34, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(42, 51, 72, 0.4);
+  border-radius: 1.5rem;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.cyber-loader-glowing-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(255, 45, 120, 0.15) 0%, rgba(12, 156, 138, 0.05) 50%, transparent 100%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cyber-loader-ring-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 2rem;
+  z-index: 1;
+}
+
+.cyber-loader-ring {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #ff2d78;
+  border-right-color: rgba(255, 45, 120, 0.2);
+  animation: cyber-spin 1.5s linear infinite;
+}
+
+.cyber-loader-ring-inner {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-bottom-color: #0c9c8a;
+  border-left-color: rgba(12, 156, 138, 0.2);
+  animation: cyber-spin-reverse 2s linear infinite;
+}
+
+.cyber-loader-core {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  background: #1c2230;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(42, 51, 72, 0.6);
+  box-shadow: 0 0 15px rgba(255, 45, 120, 0.1);
+  animation: core-pulse 2s ease-in-out infinite alternate;
+}
+
+.ai-core-svg {
+  width: 32px;
+  height: 32px;
+  color: #ff2d78;
+  filter: drop-shadow(0 0 8px rgba(255, 45, 120, 0.5));
+}
+
+.loader-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: 1;
+}
+
+.loader-subtitle {
+  font-size: 0.9rem;
+  color: #7d8590;
+  margin-bottom: 2rem;
+  max-width: 320px;
+  line-height: 1.5;
+  z-index: 1;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background-color: rgba(42, 51, 72, 0.5);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  z-index: 1;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff2d78 0%, #8b5cf6 50%, #0c9c8a 100%);
+  border-radius: 9999px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(255, 45, 120, 0.4);
+}
+
+.steps-tracker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+  z-index: 1;
+  min-height: 24px;
+}
+
+.active-step-indicator {
+  width: 8px;
+  height: 8px;
+  background-color: #0c9c8a;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #0c9c8a;
+  animation: blink-indicator 1.2s infinite;
+}
+
+.current-step-text {
+  font-size: 0.875rem;
+  color: #e6edf3;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.loader-tips {
+  background: rgba(27, 42, 74, 0.4);
+  border: 1px solid rgba(45, 74, 122, 0.4);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  width: 100%;
+  text-align: left;
+  z-index: 1;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tip-header {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #ff2d78;
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.tip-text {
+  font-size: 0.8rem;
+  color: #8ab4f8;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@keyframes cyber-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cyber-spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes core-pulse {
+  from {
+    transform: scale(0.96);
+    box-shadow: 0 0 10px rgba(255, 45, 120, 0.1);
+  }
+  to {
+    transform: scale(1.04);
+    box-shadow: 0 0 25px rgba(255, 45, 120, 0.3);
+  }
+}
+
+@keyframes blink-indicator {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
