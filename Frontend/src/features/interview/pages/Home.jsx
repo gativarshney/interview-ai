@@ -86,6 +86,14 @@ const Home = () => {
     return (
         <div className='home-page'>
 
+            {/* Header Navigation */}
+            <div className='home-nav-bar'>
+                <button className='back-dash-btn' onClick={() => navigate('/dashboard')}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Back to Dashboard
+                </button>
+            </div>
+
             {/* Page Header */}
             <header className='page-header'>
                 <h1>Create Your Custom <span className='highlight'>Interview Plan</span></h1>

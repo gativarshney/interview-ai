@@ -83,6 +83,9 @@ const interviewReportSchema = new mongoose.Schema(
     resume: {
       type: String,
     },
+    resumeFilename: {
+      type: String,
+    },
     selfDescription: {
       type: String,
     },

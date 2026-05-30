@@ -18,9 +18,11 @@ async function generateInterViewReportController(req, res) {
     try {
         // Accept optional resume file. If present, parse PDF; otherwise use empty resume text.
         let resumeText = ""
+        let resumeFilename = ""
         if (req.file && req.file.buffer) {
             const resumeContent = await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
             resumeText = resumeContent.text
+            resumeFilename = req.file.originalname
         }
 
         const { selfDescription, jobDescription, title } = req.body
@@ -43,6 +45,7 @@ async function generateInterViewReportController(req, res) {
         const interviewReport = await interviewReportModel.create({
             user: req.user.id,
             resume: resumeText,
+            resumeFilename,
             selfDescription,
             jobDescription,
             title: title || interViewReportByAi.title || getTitleFromJobDescription(jobDescription),
@@ -85,7 +88,7 @@ async function getInterviewReportByIdController(req, res) {
  * @description Controller to get all interview reports of logged in user.
  */
 async function getAllInterviewReportsController(req, res) {
-    const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan")
+    const interviewReports = await interviewReportModel.find({ user: req.user.id }).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -preparationPlan")
 
     res.status(200).json({
         message: "Interview reports fetched successfully.",
