@@ -2,12 +2,14 @@ import { getAllInterviewReports, generateInterviewReport, getInterviewReportById
 import { useContext, useEffect } from "react"
 import { InterviewContext } from "../interview.context"
 import { useParams } from "react-router-dom"
+import { useToast } from "../components/Toast.jsx"
 
 
 export const useInterview = () => {
 
     const context = useContext(InterviewContext)
     const { interviewId } = useParams()
+    const { showToast } = useToast()
 
     if (!context) {
         throw new Error("useInterview must be used within an InterviewProvider")
@@ -24,9 +26,12 @@ export const useInterview = () => {
                 setReport(response.interviewReport)
             } else {
                 console.error('generateInterviewReport returned no interviewReport', response)
+                showToast('Failed to parse the generated interview strategy. Please try again.', 'error')
             }
         } catch (error) {
-            console.log(error)
+            console.error('generateReport error:', error)
+            const msg = error.response?.data?.message || 'Failed to connect to AI generation server. Please try again.'
+            showToast(msg, 'error')
         } finally {
             setLoading(false)
         }
@@ -44,9 +49,11 @@ export const useInterview = () => {
             } else {
                 console.error('getInterviewReportById returned no interviewReport', response)
                 setReport(null)
+                showToast('Could not find the requested interview plan.', 'warning')
             }
         } catch (error) {
-            console.log(error)
+            console.error('getReportById error:', error)
+            showToast('Failed to retrieve the interview plan. Please check your connection.', 'error')
         } finally {
             setLoading(false)
         }
@@ -65,7 +72,8 @@ export const useInterview = () => {
                 setReports([])
             }
         } catch (error) {
-            console.log(error)
+            console.error('getReports error:', error)
+            showToast('Failed to load recent plans.', 'error')
         } finally {
             setLoading(false)
         }
@@ -84,9 +92,11 @@ export const useInterview = () => {
             link.setAttribute("download", `resume_${interviewReportId}.pdf`)
             document.body.appendChild(link)
             link.click()
+            showToast('ATS-optimized PDF resume generated and downloaded!', 'success')
         }
         catch (error) {
-            console.log(error)
+            console.error('getResumePdf error:', error)
+            showToast('Failed to compile ATS-optimized PDF resume. Please try again.', 'error')
         } finally {
             setLoading(false)
         }

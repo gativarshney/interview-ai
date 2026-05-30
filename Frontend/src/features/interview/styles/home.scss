@@ -373,3 +373,166 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         }
     }
 }
+
+// ── Validation Errors ─────────────────────────────────────────────────────────
+.panel__textarea--error {
+    border-color: rgba($badge-required, 0.6) !important;
+    box-shadow: 0 0 12px rgba($badge-required, 0.15);
+    background-color: rgba($badge-required, 0.02) !important;
+}
+
+.dropzone--error {
+    border-color: rgba($badge-required, 0.6) !important;
+    box-shadow: 0 0 12px rgba($badge-required, 0.15);
+    background-color: rgba($badge-required, 0.02) !important;
+}
+
+// ── Uploaded File Card ────────────────────────────────────────────────────────
+.uploaded-file-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background-color: rgba($bg-input, 0.7);
+    border: 1px solid rgba($border-color, 1.2);
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    transition: border-color 0.25s, transform 0.2s;
+
+    &:hover {
+        border-color: rgba($accent, 0.5);
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 0.5rem;
+        background-color: rgba($accent, 0.1);
+        color: $accent;
+    }
+
+    &__details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    &__name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+        word-break: break-all;
+    }
+
+    &__meta {
+        font-size: 0.75rem;
+        color: $text-muted;
+        margin: 0;
+    }
+
+    &__date {
+        font-size: 0.7rem;
+        color: rgba($text-muted, 0.8);
+        margin: 0;
+    }
+
+    &__status {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #0c9c8a;
+        background-color: rgba(12, 156, 138, 0.12);
+        padding: 0.25rem 0.6rem;
+        border-radius: 0.375rem;
+        border: 1px solid rgba(12, 156, 138, 0.25);
+
+        &__dot {
+            width: 6px;
+            height: 6px;
+            background-color: #0c9c8a;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 6px #0c9c8a;
+            animation: dot-pulse 1.6s infinite ease-in-out;
+        }
+    }
+
+    .remove-file-btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid $border-color;
+        color: $text-muted;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 0.375rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+
+        &:hover {
+            color: #fff;
+            background-color: rgba($badge-required, 0.15);
+            border-color: rgba($badge-required, 0.4);
+        }
+    }
+}
+
+// ── Empty State Card ─────────────────────────────────────────────────────────
+.empty-state-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 2rem;
+    background-color: $bg-card;
+    border: 1px dashed $border-color;
+    border-radius: 0.75rem;
+    width: 100%;
+    gap: 0.75rem;
+
+    &__icon {
+        color: rgba($text-muted, 0.5);
+        background-color: rgba($bg-input, 0.5);
+        padding: 1rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        border: 1px solid rgba($border-color, 0.5);
+    }
+
+    h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0;
+    }
+
+    p {
+        font-size: 0.85rem;
+        color: $text-muted;
+        max-width: 320px;
+        margin: 0;
+        line-height: 1.5;
+    }
+}
+
+@keyframes dot-pulse {
+    0%, 100% { opacity: 0.5; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+}

@@ -21,19 +21,10 @@ const Login = () => {
 
   if(loading){
     return (
-      <main className="login-page">
-        <section className="login-card" aria-label="Login form">
-          <div className="brand-panel">
-            <span className="brand-mark" aria-hidden="true">
-              IA
-            </span>
-            <div>
-              <p className="brand-label">Interview AI</p>
-              <h1>Loading...</h1>
-            </div>
-          </div>
-          </section>
-      </main>
+      <div className="spinner-overlay">
+        <div className="premium-spinner"></div>
+        <span className="spinner-text">Signing in...</span>
+      </div>
     )
   }
 

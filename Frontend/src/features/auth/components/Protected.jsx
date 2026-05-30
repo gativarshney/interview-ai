@@ -6,7 +6,12 @@ const Protected = ({ children }) => {
     const { user, loading } = useAuth()
 
     if(loading){
-        return <h1>Loading...</h1>
+        return (
+            <div className="spinner-overlay">
+                <div className="premium-spinner"></div>
+                <span className="spinner-text">Verifying Session...</span>
+            </div>
+        )
     }
 
     if(!user){
