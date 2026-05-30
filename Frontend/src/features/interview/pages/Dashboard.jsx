@@ -115,89 +115,187 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="dashboard-page">
-            
-            {/* Welcome Banner */}
-            <div className="dashboard-welcome">
-                <div className="welcome-glow" />
-                <button className="logout-btn-header" onClick={handleLogout}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    Logout
+        <div className="dashboard-layout-container">
+            {/* Glassmorphic Left Sidebar */}
+            <aside className="dashboard-sidebar">
+                <div className="sidebar-brand">
+                    <div className="brand-dot" />
+                    <span>Interview Copilot</span>
+                </div>
+
+                <button className="sidebar-action-btn" onClick={() => navigate('/generate')}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    New Strategy
                 </button>
-                <h1>Welcome Back, {user?.username || 'Candidate'}</h1>
-                <p>Track your preparation milestones, check ATS resume alignment statistics, and refine core competencies to clear FAANG-level engineering interviews.</p>
-            </div>
 
-            {/* Metrics Row */}
-            <div className="dashboard-metrics">
-                
-                {/* Metric: Completed */}
-                <div className="metric-card">
-                    <div className="metric-card__info">
-                        <span className="metric-label">Completed Plans</span>
-                        <h3 className="metric-value">{stats.completed}</h3>
-                        <span className="metric-subtext">AI-generated blueprints</span>
-                    </div>
-                    <div className="metric-card__icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <nav className="sidebar-nav">
+                    <button className="sidebar-nav-link active" onClick={() => navigate('/dashboard')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        Dashboard
+                    </button>
+                    <button className="sidebar-nav-link" onClick={() => navigate('/generate')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        7-Day Roadmap
+                    </button>
+                    <button className="sidebar-nav-link" onClick={handleDownloadResume}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        ATS Resume Downloader
+                    </button>
+                    <button className="sidebar-nav-link" onClick={triggerMockAlert}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        Mock Practice
+                    </button>
+                </nav>
+
+                <div className="sidebar-recents">
+                    <span className="recents-header">Recent Strategies</span>
+                    <div className="recents-list">
+                        {reports && reports.length > 0 ? (
+                            reports.slice(0, 4).map(r => (
+                                <button key={r._id} className="recent-item-link" onClick={() => navigate(`/interview/${r._id}`)}>
+                                    <span className="recent-dot" />
+                                    <span className="recent-title">{r.title || 'Untitled Strategy'}</span>
+                                </button>
+                            ))
+                        ) : (
+                            <span className="no-recents-text">No plans created yet</span>
+                        )}
                     </div>
                 </div>
 
-                {/* Metric: Resume */}
-                <div className="metric-card">
-                    <div className="metric-card__info">
-                        <span className="metric-label">Resume Status</span>
-                        <h3 className="metric-value" style={{ fontSize: stats.hasResume ? '1.1rem' : '1.75rem', fontWeight: 700, wordBreak: 'break-all' }}>
-                            {stats.hasResume ? stats.resumeName : 'Not Uploaded'}
-                        </h3>
-                        <span className="metric-subtext">
-                            {stats.hasResume ? (
-                                <>
-                                    <span className="pulse-dot" />
-                                    Active for ATS audits
-                                </>
-                            ) : (
-                                'Upload PDF for optimal scores'
-                            )}
-                        </span>
+                <div className="sidebar-user-profile">
+                    <div className="user-avatar">
+                        {user?.username ? user.username.charAt(0).toUpperCase() : 'C'}
                     </div>
-                    <div className="metric-card__icon metric-card__icon--accent">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    <div className="user-meta">
+                        <span className="user-name">{user?.username || 'Candidate'}</span>
+                        <span className="user-email">{user?.email || 'candidate@gmail.com'}</span>
                     </div>
+                    <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    </button>
                 </div>
+            </aside>
 
-                {/* Metric: Match Score */}
-                <div className="metric-card">
-                    <div className="metric-card__info">
-                        <span className="metric-label">Latest Match Score</span>
-                        <h3 className="metric-value">
-                            {stats.latestScore !== null ? `${stats.latestScore}%` : '—'}
-                        </h3>
-                        <span className="metric-subtext">ATS alignment rating</span>
+            {/* Main Interactive Workspace Area */}
+            <main className="dashboard-main-content">
+                <header className="workspace-header">
+                    <div className="header-breadcrumbs">
+                        <span>Coach</span>
+                        <span className="breadcrumb-separator">/</span>
+                        <span className="breadcrumb-active">Ask anything</span>
                     </div>
-                    <div className="metric-card__icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <div className="header-search-bar">
+                        <input type="text" placeholder="Search strategies or target roles..." />
+                        <svg className="search-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     </div>
-                </div>
-            </div>
+                </header>
 
-            {/* Dashboard Grid */}
-            <div className="dashboard-grid">
-                
-                {/* Column Left: Recent Reports & Skills */}
-                <div className="dashboard-col-left">
+                {/* Copilot Prompt Section */}
+                <section className="copilot-prompt-hero">
+                    <div className="copilot-tag">Your AI Interview Coach</div>
+                    
+                    <h1 className="copilot-title">
+                        Where should <span className="highlight-text-gradient">we start?</span>
+                    </h1>
+                    
+                    <p className="copilot-subtitle">
+                        Your FAANG-grade prep companion. Optimize your resume keyword alignment, synthesize dynamic daily study roadmaps, or practice targeted mock questions.
+                    </p>
+
+                    {/* Highly Polished Floating Prompt Box */}
+                    <div className="copilot-input-container">
+                        <div className="copilot-input-wrapper">
+                            <span className="input-indicator">|</span>
+                            <input 
+                                type="text" 
+                                placeholder="Ask Coach to analyze your target role or optimize keywords..." 
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') navigate('/generate');
+                                }}
+                            />
+                            <div className="input-actions">
+                                <span className="action-tag">Build</span>
+                                <button className="submit-prompt-btn" onClick={() => navigate('/generate')}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Dynamic Suggestion Chips */}
+                    <div className="copilot-quick-chips">
+                        <button className="chip-btn" onClick={() => navigate('/generate')}>Optimize Resume</button>
+                        <button className="chip-btn" onClick={triggerMockAlert}>Start Mock Interview</button>
+                        <button className="chip-btn" onClick={() => navigate('/generate')}>Draft 7-Day Roadmap</button>
+                        <button className="chip-btn" onClick={handleDownloadResume}>Download ATS PDF</button>
+                        <button className="chip-btn" onClick={triggerMockAlert}>Analyze Skill Gaps</button>
+                    </div>
+                </section>
+
+                {/* KPI metrics row */}
+                <section className="dashboard-metrics">
+                    <div className="metric-card">
+                        <div className="metric-card__info">
+                            <span className="metric-label">Completed Blueprints</span>
+                            <h3 className="metric-value">{stats.completed}</h3>
+                            <span className="metric-subtext">AI-generated plans</span>
+                        </div>
+                        <div className="metric-card__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        </div>
+                    </div>
+
+                    <div className="metric-card">
+                        <div className="metric-card__info">
+                            <span className="metric-label">Resume matching</span>
+                            <h3 className="metric-value" style={{ fontSize: stats.hasResume ? '0.95rem' : '1.5rem', fontWeight: 700, wordBreak: 'break-all' }}>
+                                {stats.hasResume ? stats.resumeName : 'Not Uploaded'}
+                            </h3>
+                            <span className="metric-subtext">
+                                {stats.hasResume ? (
+                                    <>
+                                        <span className="pulse-dot" />
+                                        ATS Optimized
+                                    </>
+                                ) : (
+                                    'Upload to unlock scores'
+                                )}
+                            </span>
+                        </div>
+                        <div className="metric-card__icon metric-card__icon--accent">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        </div>
+                    </div>
+
+                    <div className="metric-card">
+                        <div className="metric-card__info">
+                            <span className="metric-label">Latest Match Rating</span>
+                            <h3 className="metric-value">
+                                {stats.latestScore !== null ? `${stats.latestScore}%` : '—'}
+                            </h3>
+                            <span className="metric-subtext">ATS Keyword Fit</span>
+                        </div>
+                        <div className="metric-card__icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Workspace grid details */}
+                <div className="dashboard-grid">
                     
                     {/* Recent Plans Card */}
                     <div className="dash-card">
                         <div className="dash-card__header">
                             <h2>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                Recent Strategies
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                Recent Blueprints & Strategies
                             </h2>
                         </div>
 
                         {loading ? (
-                            <p style={{ color: '#7d8590', fontStyle: 'italic', fontSize: '0.9rem' }}>Loading recent strategies...</p>
+                            <p style={{ color: '#7d8590', fontStyle: 'italic', fontSize: '0.85rem' }}>Loading recent strategies...</p>
                         ) : reports && reports.length > 0 ? (
                             <div className="dash-reports-list">
                                 {reports.map(r => (
@@ -233,114 +331,79 @@ const Dashboard = () => {
                                 ))}
                             </div>
                         ) : (
-                            <p style={{ color: '#7d8590', fontStyle: 'italic', fontSize: '0.9rem', margin: 0 }}>
-                                No strategies created yet. Get started by clicking "Generate Strategy Blueprint" on the right panel.
+                            <p style={{ color: '#7d8590', fontStyle: 'italic', fontSize: '0.85rem', margin: 0 }}>
+                                No strategies created yet. click "New Strategy" on the sidebar or type a prompt above to get started.
                             </p>
                         )}
                     </div>
-                </div>
 
-                {/* Column Right: Smart Action & Quick Actions */}
-                <div className="dashboard-col-right">
-                    
-                    {/* Recommended Next Action */}
-                    <div className="dash-card recommended-action-card">
-                        <div className="card-accent-line" />
-                        <div className="dash-card__header" style={{ border: 'none', padding: 0 }}>
-                            <h2 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ff2d78' }}>
-                                Recommended Next Action
-                            </h2>
-                        </div>
-                        <div className="recommended-action-card__body">
-                            <h3 className="action-title">{recommendedAction.title}</h3>
-                            <p className="action-text">{recommendedAction.text}</p>
-                        </div>
-                        <button className="cta-btn" onClick={recommendedAction.action}>
-                            {recommendedAction.btnText}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                        </button>
-                    </div>
-
-                    {/* Skill Insights */}
-                    <div className="dash-card">
-                        <div className="dash-card__header">
-                            <h2>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 22 22 22"></polygon><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                                Skill Insights
-                            </h2>
-                        </div>
-                        <div className="skill-insights-widget">
-                            
-                            {/* Strongest Skills */}
-                            <div className="insight-section">
-                                <h3>Core Demonstrated Strengths</h3>
-                                <div className="skills-list">
-                                    {skillInsights.strong.length > 0 ? (
-                                        skillInsights.strong.map((s, idx) => (
-                                            <span key={idx} className="skill-chip skill-chip--strong">{s}</span>
-                                        ))
-                                    ) : (
-                                        <p className="no-skills-msg">Analyze a plan to extract strengths.</p>
-                                    )}
-                                </div>
+                    <div className="dashboard-grid-right-col">
+                        {/* Skill Insights widget */}
+                        <div className="dash-card">
+                            <div className="dash-card__header">
+                                <h2>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 22 22 22"></polygon><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                    Skill Gap Audit
+                                </h2>
                             </div>
+                            <div className="skill-insights-widget">
+                                <div className="insight-section">
+                                    <h3>Core Strengths</h3>
+                                    <div className="skills-list">
+                                        {skillInsights.strong.length > 0 ? (
+                                            skillInsights.strong.map((s, idx) => (
+                                                <span key={idx} className="skill-chip skill-chip--strong">{s}</span>
+                                            ))
+                                        ) : (
+                                            <p className="no-skills-msg">Analyze a plan to extract strengths.</p>
+                                        )}
+                                    </div>
+                                </div>
 
-                            {/* Weakest Skills / High Severity Gaps */}
-                            <div className="insight-section">
-                                <h3>High Severity Gaps</h3>
-                                <div className="skills-list">
-                                    {skillInsights.gapsHigh.length > 0 ? (
-                                        skillInsights.gapsHigh.map((s, idx) => (
-                                            <span key={idx} className="skill-chip skill-chip--weak-high">{s}</span>
-                                        ))
-                                    ) : skillInsights.gapsMedium.length > 0 ? (
-                                        skillInsights.gapsMedium.map((s, idx) => (
-                                            <span key={idx} className="skill-chip skill-chip--weak-medium">{s}</span>
-                                        ) )
-                                    ) : (
-                                        <p className="no-skills-msg">No critical skill gaps detected.</p>
-                                    )}
+                                <div className="insight-section">
+                                    <h3>High Severity Gaps</h3>
+                                    <div className="skills-list">
+                                        {skillInsights.gapsHigh.length > 0 ? (
+                                            skillInsights.gapsHigh.map((s, idx) => (
+                                                <span key={idx} className="skill-chip skill-chip--weak-high">{s}</span>
+                                            ))
+                                        ) : skillInsights.gapsMedium.length > 0 ? (
+                                            skillInsights.gapsMedium.map((s, idx) => (
+                                                <span key={idx} className="skill-chip skill-chip--weak-medium">{s}</span>
+                                            ) )
+                                        ) : (
+                                            <p className="no-skills-msg">No critical skill gaps detected.</p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Quick Actions Panel */}
-                    <div className="dash-card">
-                        <div className="dash-card__header">
-                            <h2>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"></line><line x1="19.07" y1="4.93" x2="14.83" y2="9.17"></line><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"></line><line x1="9.17" y1="14.83" x2="4.93" y2="19.07"></line></svg>
-                                Quick Actions
-                            </h2>
-                        </div>
-                        <div className="quick-actions-grid">
-                            <button className="action-btn action-btn--primary" onClick={() => navigate('/generate')}>
-                                <span className="action-btn__icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                </span>
-                                Generate Strategy Blueprint
-                            </button>
-                            <button className="action-btn" onClick={handleDownloadResume} disabled={pdfGenerating}>
-                                <span className="action-btn__icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
-                                </span>
-                                Generate Premium Resume
-                            </button>
-                            <button className="action-btn" onClick={triggerMockAlert}>
-                                <span className="action-btn__icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                                </span>
-                                Practice Behavioral Mock
+                        {/* Recommended Actions */}
+                        <div className="dash-card recommended-action-card">
+                            <div className="card-accent-line" />
+                            <div className="dash-card__header" style={{ border: 'none', padding: 0 }}>
+                                <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#ff2d78' }}>
+                                    Coach Recommendation
+                                </h2>
+                            </div>
+                            <div className="recommended-action-card__body">
+                                <h3 className="action-title">{recommendedAction.title}</h3>
+                                <p className="action-text">{recommendedAction.text}</p>
+                            </div>
+                            <button className="cta-btn" onClick={recommendedAction.action}>
+                                {recommendedAction.btnText}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                             </button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
             
             {/* Download Progress Modal Overlay */}
             <ResumePdfModal />
         </div>
-    )
+    );
 }
 
-export default Dashboard
+export default Dashboard;
