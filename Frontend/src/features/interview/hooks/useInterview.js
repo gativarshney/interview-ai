@@ -15,7 +15,14 @@ export const useInterview = () => {
         throw new Error("useInterview must be used within an InterviewProvider")
     }
 
-    const { loading, setLoading, report, setReport, reports, setReports } = context
+    const { 
+        loading, setLoading, 
+        report, setReport, 
+        reports, setReports,
+        pdfGenerating, setPdfGenerating,
+        pdfStep, setPdfStep,
+        pdfError, setPdfError
+    } = context
 
     const generateReport = async ({ jobDescription, selfDescription, resumeFile }) => {
         setLoading(true)
@@ -82,23 +89,54 @@ export const useInterview = () => {
     }
 
     const getResumePdf = async (interviewReportId) => {
-        setLoading(true)
-        let response = null
+        setPdfGenerating(true)
+        setPdfError(null)
+        setPdfStep(1) // Step 1: Analyzing Resume Data
+
+        // Progressive steps timer (faked interval for ultra-premium feel)
+        let currentStep = 1
+        const timer = setInterval(() => {
+            if (currentStep < 3) {
+                currentStep += 1
+                setPdfStep(currentStep) // Step 2: Optimizing ATS Keywords -> Step 3: Generating Layout
+            }
+        }, 2200)
+
         try {
-            response = await generateResumePdf({ interviewReportId })
+            const response = await generateResumePdf({ interviewReportId })
+            
+            clearInterval(timer)
+            setPdfStep(4) // Step 4: Building PDF
+            
+            await new Promise(r => setTimeout(r, 1000))
+            setPdfStep(5) // Step 5: Preparing Download
+
+            await new Promise(r => setTimeout(r, 1000))
+            setPdfStep(6) // Step 6: Success! Resume Ready
+
             const url = window.URL.createObjectURL(new Blob([ response ], { type: "application/pdf" }))
             const link = document.createElement("a")
             link.href = url
             link.setAttribute("download", `resume_${interviewReportId}.pdf`)
             document.body.appendChild(link)
             link.click()
-            showToast('ATS-optimized PDF resume generated and downloaded!', 'success')
+            document.body.removeChild(link)
+            
+            showToast('ATS-optimized PDF resume compiled successfully!', 'success')
+            
+            // Wait in success state for visual completion
+            await new Promise(r => setTimeout(r, 1600))
         }
         catch (error) {
+            clearInterval(timer)
             console.error('getResumePdf error:', error)
+            setPdfError(error.message || 'Failed to compile ATS-optimized PDF resume.')
             showToast('Failed to compile ATS-optimized PDF resume. Please try again.', 'error')
+            await new Promise(r => setTimeout(r, 3000))
         } finally {
-            setLoading(false)
+            setPdfGenerating(false)
+            setPdfStep(0)
+            setPdfError(null)
         }
     }
 

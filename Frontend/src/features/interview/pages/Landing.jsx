@@ -328,12 +328,31 @@ const Landing = () => {
             {/* 7. Final Call to Action */}
             <section className="section-padding cta-banner-section">
                 <div className="cta-banner-card">
-                    <h2>Outprepare. Outperform. Succeed.</h2>
-                    <p>Join over 25,000+ software engineers executing custom AI strategy blueprints to secure high-paying tech offers.</p>
-                    <button className="btn-primary btn-large btn-pulsate" onClick={handleCTA}>
-                        {user ? 'Go to Dashboard' : 'Get Started Free Now'}
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                    </button>
+                    <div className="cta-glow-element" />
+                    <h2>Clear the Bar. <br /><span className="text-gradient">Land Your Dream Job Today.</span></h2>
+                    <p>
+                        Stop guessing what recruiters want. Synthesize your personalized preparation roadmap, close technical skill gaps, and execute a winning strategy built for the world's most elite engineering teams.
+                    </p>
+                    <div className="cta-actions-row">
+                        <button className="btn-primary btn-large btn-pulsate" onClick={handleCTA}>
+                            {user ? 'Go to Dashboard' : 'Get Started Free Now'}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                        <button className="btn-secondary btn-large" onClick={() => scrollSection('overview')}>
+                            Browse Capabilities
+                        </button>
+                    </div>
+
+                    {/* Trust Signals */}
+                    <div className="cta-trust-signals">
+                        <p className="trust-heading">JOIN SOFTWARE ENGINEERS PLACED AT</p>
+                        <div className="trust-logos-row">
+                            <span className="brand-badge">Google</span>
+                            <span className="brand-badge">Stripe</span>
+                            <span className="brand-badge">Meta</span>
+                            <span className="brand-badge">Netflix</span>
+                        </div>
+                    </div>
                 </div>
             </section>
 
