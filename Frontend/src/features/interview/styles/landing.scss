@@ -117,6 +117,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         align-items: center;
         gap: 0.5rem;
         cursor: pointer;
+        z-index: 1100; // Keep logo clickable even over drawer
 
         .logo-icon {
             font-size: 0.8rem;
@@ -155,7 +156,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         }
 
         @media (max-width: 768px) {
-            display: none; // Hide on mobile for simplification
+            display: none; // Hide on mobile
         }
     }
 
@@ -163,6 +164,10 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         display: flex;
         align-items: center;
         gap: 1rem;
+
+        @media (max-width: 768px) {
+            display: none; // Hide on mobile since they are in mobile drawer
+        }
 
         .btn-text {
             background: none;
@@ -223,6 +228,161 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 
             &:hover {
                 background: rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+
+    // Hamburger button styles
+    .hamburger-btn {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 22px;
+        height: 18px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1100; // Keep on top of drawer
+
+        @media (max-width: 768px) {
+            display: flex;
+        }
+
+        .hamburger-line {
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+            border-radius: 4px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        &.active {
+            .hamburger-line:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+            .hamburger-line:nth-child(2) {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            .hamburger-line:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+    }
+
+    // Mobile Glassmorphic Drawer
+    .mobile-nav-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba($bg-page, 0.96);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 3.5rem;
+        padding: 2.5rem;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-15px);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2.25rem;
+
+            button {
+                background: none;
+                border: none;
+                color: $text-muted;
+                font-size: 1.35rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: color 0.2s, transform 0.2s;
+
+                &:hover {
+                    color: #ffffff;
+                    transform: scale(1.05);
+                }
+            }
+        }
+
+        .mobile-nav-ctas {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            max-width: 250px;
+
+            button {
+                width: 100%;
+                padding: 0.85rem;
+                font-size: 0.9rem;
+                font-weight: 700;
+                text-align: center;
+                border-radius: 0.5rem;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .btn-text {
+                background: none;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: $text-muted;
+
+                &:hover {
+                    color: #ffffff;
+                    border-color: #ffffff;
+                }
+            }
+
+            .btn-logout {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid $border-color;
+                color: $text-muted;
+
+                &:hover {
+                    color: #ffffff;
+                    background: rgba($accent, 0.1);
+                    border-color: rgba($accent, 0.3);
+                }
+            }
+
+            .btn-primary {
+                background: $accent;
+                border: none;
+                color: #ffffff;
+
+                &:hover {
+                    box-shadow: 0 0 15px rgba($accent, 0.4);
+                }
+            }
+
+            .btn-secondary {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid $border-color;
+                color: #ffffff;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                }
             }
         }
     }

@@ -813,3 +813,291 @@ $severity-low: #3fb950;
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+// ── Mobile Responsive Rules & Custom Insights Panel ──────────────────────────
+.interview-mobile-layout {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background-color: $bg-card;
+    border: 1px solid $border-color;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+    .interview-page {
+        padding: 0.75rem;
+    }
+
+    .interview-layout {
+        display: none !important;
+    }
+
+    .interview-mobile-layout {
+        display: flex;
+    }
+}
+
+// Mobile top actions header
+.mobile-interview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: rgba($bg-page, 0.4);
+    border-bottom: 1px solid $border-color;
+    gap: 1rem;
+
+    .mobile-back-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: none;
+        border: none;
+        color: $text-muted;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        outline: none;
+
+        &:hover {
+            color: #ffffff;
+        }
+    }
+
+    .mobile-header-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #ffffff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: center;
+        flex-grow: 1;
+    }
+
+    .mobile-download-btn {
+        background: rgba($accent, 0.1);
+        border: 1px solid rgba($accent, 0.3);
+        color: $accent;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.3rem 0.75rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        outline: none;
+
+        &:hover {
+            background: rgba($accent, 0.15);
+            border-color: $accent;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+}
+
+// Mobile persistent sticky tab selector
+.mobile-interview-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background-color: rgba($bg-panel, 0.5);
+    border-bottom: 1px solid $border-color;
+
+    .mobile-tab-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        padding: 0.85rem 0.5rem;
+        background: none;
+        border: none;
+        color: $text-muted;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-bottom: 2px solid transparent;
+        outline: none;
+
+        .tab-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: currentColor;
+        }
+
+        .tab-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        &.active {
+            color: $accent;
+            border-bottom-color: $accent;
+            background-color: rgba($accent, 0.04);
+        }
+    }
+}
+
+// Mobile content panel
+.mobile-interview-content {
+    padding: 1.5rem 1.25rem;
+    min-height: 400px;
+    max-height: calc(100vh - 12rem);
+    overflow-y: auto;
+
+    .content-header {
+        margin-bottom: 1.25rem;
+    }
+}
+
+// Insights Tab Pane (Match Score & Skill Gaps)
+.mobile-insights-tab-pane {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    h3 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding-bottom: 0.5rem;
+    }
+
+    .mobile-match-score-card {
+        background-color: $bg-panel;
+        border: 1px solid $border-color;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+
+        .match-score-ring-wrapper {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px currentColor;
+
+            &.score--high {
+                color: $severity-low;
+                border-color: $severity-low;
+            }
+
+            &.score--mid {
+                color: $severity-medium;
+                border-color: $severity-medium;
+            }
+
+            &.score--low {
+                color: $severity-high;
+                border-color: $severity-high;
+            }
+
+            .score-num {
+                font-size: 2rem;
+                font-weight: 800;
+                color: #ffffff;
+            }
+
+            .score-pct {
+                font-size: 0.9rem;
+                color: $text-muted;
+                margin-top: 5px;
+            }
+        }
+
+        .score-evaluation-text {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: $text-primary;
+            text-align: center;
+            margin: 0;
+            max-width: 280px;
+        }
+    }
+
+    .mobile-skill-gaps-card {
+        background-color: $bg-panel;
+        border: 1px solid $border-color;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+
+        .skill-gaps-grid-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .mobile-skill-gap-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background-color: $bg-card;
+            border: 1px solid $border-color;
+            border-radius: 0.5rem;
+
+            .skill-name {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: #ffffff;
+            }
+
+            .severity-badge {
+                font-size: 0.65rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                padding: 0.2rem 0.5rem;
+                border-radius: 0.25rem;
+            }
+
+            &--high {
+                border-color: rgba($severity-high, 0.3);
+                background-color: rgba($severity-high, 0.04);
+                .severity-badge {
+                    color: $severity-high;
+                    background-color: rgba($severity-high, 0.1);
+                }
+            }
+
+            &--medium {
+                border-color: rgba($severity-medium, 0.3);
+                background-color: rgba($severity-medium, 0.04);
+                .severity-badge {
+                    color: $severity-medium;
+                    background-color: rgba($severity-medium, 0.1);
+                }
+            }
+
+            &--low {
+                border-color: rgba($severity-low, 0.3);
+                background-color: rgba($severity-low, 0.04);
+                .severity-badge {
+                    color: $severity-low;
+                    background-color: rgba($severity-low, 0.1);
+                }
+            }
+        }
+
+        .no-gaps-found-msg {
+            font-size: 0.825rem;
+            color: $severity-low;
+            text-align: center;
+            margin: 0;
+            padding: 0.5rem 0;
+        }
+    }
+}

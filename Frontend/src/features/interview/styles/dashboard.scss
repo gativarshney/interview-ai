@@ -40,13 +40,48 @@ $font-stack:     'Outfit', 'Inter', system-ui, sans-serif;
     top: 0;
     height: 100vh;
     z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
     @media (max-width: 992px) {
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100vh;
+        z-index: 2000;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
         padding: 1.5rem;
+
+        &.open {
+            transform: translateX(280px);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
+        }
+    }
+
+    .sidebar-brand-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        
+        .mobile-sidebar-close-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: rgba($text-muted, 0.6);
+            cursor: pointer;
+            padding: 0.5rem;
+            
+            @media (max-width: 992px) {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            &:hover {
+                color: #ffffff;
+            }
+        }
     }
 
     .sidebar-brand {
@@ -54,6 +89,7 @@ $font-stack:     'Outfit', 'Inter', system-ui, sans-serif;
         align-items: center;
         gap: 0.75rem;
         padding-left: 0.5rem;
+        cursor: pointer;
 
         .brand-dot {
             width: 14px;
@@ -937,4 +973,100 @@ $font-stack:     'Outfit', 'Inter', system-ui, sans-serif;
 @keyframes dot-pulse {
     0%, 100% { transform: scale(1); opacity: 0.6; }
     50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px $success; }
+}
+
+// ── Dashboard Mobile Responsive Additions ────────────────────────────────────
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+.mobile-dashboard-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 1.5rem;
+    background: rgba($bg-sidebar, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+
+    @media (max-width: 992px) {
+        display: flex;
+    }
+
+    .mobile-menu-toggle-btn {
+        background: none;
+        border: none;
+        color: #ffffff;
+        cursor: pointer;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+    }
+
+    .mobile-header-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, $accent 0%, $purple-glow 100%);
+            box-shadow: 0 0 8px rgba($accent, 0.6);
+        }
+
+        span {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+    }
+
+    .mobile-header-actions {
+        .mobile-new-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none;
+
+            &:hover {
+                background: rgba($accent, 0.1);
+                border-color: rgba($accent, 0.3);
+            }
+        }
+    }
 }

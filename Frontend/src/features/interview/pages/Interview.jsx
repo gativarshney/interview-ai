@@ -13,6 +13,13 @@ const NAV_ITEMS = [
     { id: 'roadmap', label: 'Road Map', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11" /></svg>) },
 ]
 
+const MOBILE_NAV_ITEMS = [
+    { id: 'technical', label: 'Technical', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>) },
+    { id: 'behavioral', label: 'Behavioral', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>) },
+    { id: 'roadmap', label: 'Road Map', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11" /></svg>) },
+    { id: 'insights', label: 'Insights', icon: (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>) },
+]
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 // ── Sub-components ────────────────────────────────────────────────────────────
 const QuestionCard = ({ item, index, jobDescription }) => {
@@ -205,7 +212,7 @@ const Interview = () => {
     const navigate = useNavigate()
     const [ activeNav, setActiveNav ] = useState(() => {
         const queryNav = new URLSearchParams(window.location.search).get('nav')
-        return ['technical', 'behavioral', 'roadmap'].includes(queryNav) ? queryNav : 'technical'
+        return ['technical', 'behavioral', 'roadmap', 'insights'].includes(queryNav) ? queryNav : 'technical'
     })
     const { report, loading, getResumePdf, pdfGenerating } = useInterview()
     const { interviewId } = useParams()
@@ -223,6 +230,7 @@ const Interview = () => {
 
     return (
         <div className='interview-page'>
+            {/* Desktop Layout (hidden on mobile via CSS) */}
             <div className='interview-layout'>
 
                 {/* ── Left Nav ── */}
@@ -355,6 +363,129 @@ const Interview = () => {
 
                 </aside>
             </div>
+
+            {/* Mobile Layout (hidden on desktop via CSS) */}
+            <div className='interview-mobile-layout'>
+                {/* Mobile Header Row */}
+                <header className='mobile-interview-header'>
+                    <button type="button" className='mobile-back-btn' onClick={() => navigate('/')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back
+                    </button>
+                    <span className='mobile-header-title'>{report.title || 'Strategy Report'}</span>
+                    <button 
+                        type="button"
+                        className='mobile-download-btn' 
+                        onClick={() => getResumePdf(interviewId)}
+                        disabled={pdfGenerating}
+                    >
+                        {pdfGenerating ? '...' : 'PDF'}
+                    </button>
+                </header>
+
+                {/* Mobile Sticky Tab Segment Bar */}
+                <nav className='mobile-interview-tabs'>
+                    {MOBILE_NAV_ITEMS.map(item => (
+                        <button
+                            key={item.id}
+                            type="button"
+                            className={`mobile-tab-item ${activeNav === item.id ? 'active' : ''}`}
+                            onClick={() => setActiveNav(item.id)}
+                        >
+                            <span className='tab-icon'>{item.icon}</span>
+                            <span className='tab-label'>{item.label}</span>
+                        </button>
+                    ))}
+                </nav>
+
+                {/* Mobile Active Panel Content Pane */}
+                <main className='mobile-interview-content'>
+                    {(activeNav === 'technical' || activeNav === 'insights') && ( // Default fallback to technical
+                        activeNav === 'technical' && (
+                            <section>
+                                <div className='content-header'>
+                                    <h2>Technical Questions</h2>
+                                    <span className='content-header__count'>{report.technicalQuestions.length} questions</span>
+                                </div>
+                                <div className='q-list'>
+                                    {report.technicalQuestions.map((q, i) => (
+                                        <QuestionCard key={i} item={q} index={i} jobDescription={report.jobDescription} />
+                                    ))}
+                                </div>
+                            </section>
+                        )
+                    )}
+
+                    {activeNav === 'behavioral' && (
+                        <section>
+                            <div className='content-header'>
+                                <h2>Behavioral Questions</h2>
+                                <span className='content-header__count'>{report.behavioralQuestions.length} questions</span>
+                            </div>
+                            <div className='q-list'>
+                                {report.behavioralQuestions.map((q, i) => (
+                                    <QuestionCard key={i} item={q} index={i} jobDescription={report.jobDescription} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {activeNav === 'roadmap' && (
+                        <section>
+                            <div className='content-header'>
+                                <h2>Preparation Road Map</h2>
+                                <span className='content-header__count'>{report.preparationPlan.length}-day plan</span>
+                            </div>
+                            <div className='roadmap-list'>
+                                {report.preparationPlan.map((day) => (
+                                    <RoadMapDay key={day.day} day={day} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {activeNav === 'insights' && (
+                        <section className='mobile-insights-tab-pane'>
+                            {/* Match Score */}
+                            <div className='mobile-match-score-card'>
+                                <h3>Alignment Match Score</h3>
+                                <div className={`match-score-ring-wrapper ${scoreColor}`}>
+                                    <span className='score-num'>{report.matchScore}</span>
+                                    <span className='score-pct'>%</span>
+                                </div>
+                                <p className='score-evaluation-text'>
+                                    {report.matchScore >= 80 
+                                        ? '✓ Profile matching ratio is outstanding for this position.' 
+                                        : report.matchScore >= 60 
+                                            ? '⚠ Good matching score. Address the key gaps below to pass ATS screening.' 
+                                            : '✗ Low match score. Recommended to optimize resume fields to meet basic guidelines.'}
+                                </p>
+                            </div>
+
+                            {/* Skill Gaps Card */}
+                            <div className='mobile-skill-gaps-card'>
+                                <h3>Detected Gaps in Profile</h3>
+                                <div className='skill-gaps-grid-list'>
+                                    {report.skillGaps.length > 0 ? (
+                                        report.skillGaps.map((gap, i) => (
+                                            <div key={i} className={`mobile-skill-gap-item mobile-skill-gap-item--${gap.severity}`}>
+                                                <span className='skill-name'>{gap.skill}</span>
+                                                <span className='severity-badge'>{gap.severity}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p className='no-gaps-found-msg'>✓ No profile skill gaps detected. ATS matching index is stable!</p>
+                                    )}
+                                </div>
+                            </div>
+                        </section>
+                    )}
+                </main>
+            </div>
+
             <ResumePdfModal />
         </div>
     )

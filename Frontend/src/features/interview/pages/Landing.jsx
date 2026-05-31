@@ -26,6 +26,7 @@ const Landing = () => {
     const { user, handleLogout } = useAuth()
     const navigate = useNavigate()
     const [openFaqIndex, setOpenFaqIndex] = useState(null)
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     const toggleFaq = (index) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index)
@@ -82,6 +83,48 @@ const Landing = () => {
                                     Sign In
                                 </button>
                                 <button className="btn-primary" onClick={() => navigate('/register')}>
+                                    Get Started
+                                </button>
+                            </>
+                        )}
+                    </div>
+                    
+                    {/* Hamburger Button for Mobile View */}
+                    <button 
+                        className={`hamburger-btn ${mobileMenuOpen ? 'active' : ''}`} 
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        aria-label="Toggle navigation menu"
+                    >
+                        <span className="hamburger-line"></span>
+                        <span className="hamburger-line"></span>
+                        <span className="hamburger-line"></span>
+                    </button>
+                </div>
+
+                {/* Mobile Drawer Overlay */}
+                <div className={`mobile-nav-drawer ${mobileMenuOpen ? 'open' : ''}`}>
+                    <nav className="mobile-nav-links">
+                        <button onClick={() => { scrollSection('overview'); setMobileMenuOpen(false); }}>Overview</button>
+                        <button onClick={() => { scrollSection('features'); setMobileMenuOpen(false); }}>Features</button>
+                        <button onClick={() => { scrollSection('how-it-works'); setMobileMenuOpen(false); }}>How it Works</button>
+                        <button onClick={() => { scrollSection('faq'); setMobileMenuOpen(false); }}>FAQ</button>
+                    </nav>
+                    <div className="mobile-nav-ctas">
+                        {user ? (
+                            <>
+                                <button className="btn-secondary" onClick={() => { navigate('/dashboard'); setMobileMenuOpen(false); }}>
+                                    Dashboard
+                                </button>
+                                <button className="btn-logout" onClick={() => { handleLogout(); setMobileMenuOpen(false); }}>
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <button className="btn-text" onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
+                                    Sign In
+                                </button>
+                                <button className="btn-primary" onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
                                     Get Started
                                 </button>
                             </>

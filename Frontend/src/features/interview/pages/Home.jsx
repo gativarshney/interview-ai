@@ -18,6 +18,7 @@ const Home = () => {
     const [ fileUpdatedTime, setFileUpdatedTime ] = useState("")
     const [ validationErrors, setValidationErrors ] = useState({ jobDescription: false, profile: false })
     const [ dragActive, setDragActive ] = useState(false)
+    const [ mobileMenuOpen, setMobileMenuOpen ] = useState(false)
     
     const resumeInputRef = useRef()
 
@@ -136,18 +137,34 @@ const Home = () => {
             <div className='mesh-glow mesh-glow--teal' />
 
             {/* Floating Capsule Top Navigation Bar */}
-            <nav className='floating-navbar'>
-                <div className='nav-brand'>
-                    <div className='brand-glow-dot' />
-                    <span className='brand-text-main'>Interview<span className='brand-text-accent'>OS</span></span>
+            <nav className={`floating-navbar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+                <div className="nav-top-row">
+                    <div className='nav-brand' onClick={() => navigate('/')}>
+                        <div className='brand-glow-dot' />
+                        <span className='brand-text-main'>Interview<span className='brand-text-accent'>OS</span></span>
+                    </div>
+
+                    {/* Hamburger Button for Mobile floating capsule */}
+                    <button 
+                        type="button"
+                        className={`floating-hamburger ${mobileMenuOpen ? 'active' : ''}`}
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        aria-label="Toggle navigation menu"
+                    >
+                        <span className="hamburger-line"></span>
+                        <span className="hamburger-line"></span>
+                        <span className="hamburger-line"></span>
+                    </button>
                 </div>
+
                 <div className='nav-center-links'>
-                    <a href='#workspace' onClick={(e) => handleScrollTo(e, 'workspace')} className='nav-link'>Workspace</a>
-                    <a href='#plans' onClick={(e) => handleScrollTo(e, 'plans')} className='nav-link'>Recent Plans</a>
+                    <a href='#workspace' onClick={(e) => { handleScrollTo(e, 'workspace'); setMobileMenuOpen(false); }} className='nav-link'>Workspace</a>
+                    <a href='#plans' onClick={(e) => { handleScrollTo(e, 'plans'); setMobileMenuOpen(false); }} className='nav-link'>Recent Plans</a>
                 </div>
+
                 <div className='nav-actions'>
                     <span className='nav-user-greeting'>Hi, {user?.username || 'Candidate'}</span>
-                    <button type="button" className='nav-cta-btn' onClick={handleNavbarGenerateReport}>
+                    <button type="button" className='nav-cta-btn' onClick={(e) => { handleNavbarGenerateReport(e); setMobileMenuOpen(false); }}>
                         Generate Report
                     </button>
                     <button type="button" className='nav-logout-btn' onClick={handleLogout} title="Logout">

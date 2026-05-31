@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useInterview } from '../hooks/useInterview'
 import useAuth from '../../auth/hooks/useAuth'
@@ -10,6 +10,7 @@ const Dashboard = () => {
     const { user, handleLogout } = useAuth()
     const { showToast } = useToast()
     const navigate = useNavigate()
+    const [sidebarOpen, setSidebarOpen] = useState(false)
 
     useEffect(() => {
         getReports()
@@ -116,32 +117,77 @@ const Dashboard = () => {
 
     return (
         <div className="dashboard-layout-container">
-            {/* Glassmorphic Left Sidebar */}
-            <aside className="dashboard-sidebar">
-                <div className="sidebar-brand">
+            {/* Sidebar backdrop overlay on mobile */}
+            <div 
+                className={`sidebar-overlay ${sidebarOpen ? 'show' : ''}`} 
+                onClick={() => setSidebarOpen(false)}
+            />
+
+            {/* Mobile Top Bar */}
+            <header className="mobile-dashboard-header">
+                <button 
+                    type="button"
+                    className="mobile-menu-toggle-btn"
+                    onClick={() => setSidebarOpen(true)}
+                    aria-label="Toggle sidebar menu"
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div className="mobile-header-brand" onClick={() => navigate('/')}>
                     <div className="brand-dot" />
                     <span>Interview Copilot</span>
                 </div>
+                <div className="mobile-header-actions">
+                    <button type="button" className="mobile-new-btn" onClick={() => navigate('/generate')} title="New Strategy">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                </div>
+            </header>
 
-                <button className="sidebar-action-btn" onClick={() => navigate('/generate')}>
+            {/* Glassmorphic Left Sidebar */}
+            <aside className={`dashboard-sidebar ${sidebarOpen ? 'open' : ''}`}>
+                <div className="sidebar-brand-wrapper">
+                    <div className="sidebar-brand" onClick={() => { navigate('/'); setSidebarOpen(false); }}>
+                        <div className="brand-dot" />
+                        <span>Interview Copilot</span>
+                    </div>
+                    {/* Mobile close sidebar button */}
+                    <button 
+                        type="button"
+                        className="mobile-sidebar-close-btn"
+                        onClick={() => setSidebarOpen(false)}
+                        aria-label="Close sidebar"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+
+                <button className="sidebar-action-btn" onClick={() => { navigate('/generate'); setSidebarOpen(false); }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     New Strategy
                 </button>
 
                 <nav className="sidebar-nav">
-                    <button className="sidebar-nav-link active" onClick={() => navigate('/dashboard')}>
+                    <button className="sidebar-nav-link active" onClick={() => { navigate('/dashboard'); setSidebarOpen(false); }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         Dashboard
                     </button>
-                    <button className="sidebar-nav-link" onClick={() => navigate('/generate')}>
+                    <button className="sidebar-nav-link" onClick={() => { navigate('/generate'); setSidebarOpen(false); }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                         7-Day Roadmap
                     </button>
-                    <button className="sidebar-nav-link" onClick={handleDownloadResume}>
+                    <button className="sidebar-nav-link" onClick={() => { handleDownloadResume(); setSidebarOpen(false); }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
                         ATS Resume Downloader
                     </button>
-                    <button className="sidebar-nav-link" onClick={triggerMockAlert}>
+                    <button className="sidebar-nav-link" onClick={() => { triggerMockAlert(); setSidebarOpen(false); }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                         Mock Practice
                     </button>
@@ -152,7 +198,7 @@ const Dashboard = () => {
                     <div className="recents-list">
                         {reports && reports.length > 0 ? (
                             reports.slice(0, 4).map(r => (
-                                <button key={r._id} className="recent-item-link" onClick={() => navigate(`/interview/${r._id}`)}>
+                                <button key={r._id} className="recent-item-link" onClick={() => { navigate(`/interview/${r._id}`); setSidebarOpen(false); }}>
                                     <span className="recent-dot" />
                                     <span className="recent-title">{r.title || 'Untitled Strategy'}</span>
                                 </button>
@@ -171,7 +217,7 @@ const Dashboard = () => {
                         <span className="user-name">{user?.username || 'Candidate'}</span>
                         <span className="user-email">{user?.email || 'candidate@gmail.com'}</span>
                     </div>
-                    <button className="logout-icon-btn" onClick={handleLogout} title="Logout">
+                    <button className="logout-icon-btn" onClick={() => { handleLogout(); setSidebarOpen(false); }} title="Logout">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                     </button>
                 </div>
