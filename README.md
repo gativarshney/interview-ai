@@ -1,233 +1,126 @@
-# 🚀 Interview AI — Full Stack GenAI Job Preparation Platform
+# 🚀 Full-Stack GenAI Job Preparation Platform (Interview Copilot)
 
-An **AI-powered full stack web application** designed to help users prepare for job interviews through **intelligent resume analysis, skill gap detection, and AI-generated interview questions**.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Interview%20Copilot-blueviolet?style=flat-square&logo=vercel)](https://interview-copilot-ai-iota.vercel.app/)
+[![Backend Status](https://img.shields.io/badge/Backend-Deployed%20on%20Render-blue?style=flat-square&logo=render)](https://render.com)
 
-This project simulates a **real-world job preparation ecosystem**, combining **modern web development + Generative AI** to deliver actionable insights for candidates.
+An enterprise-ready, full-stack web application designed to help candidates prepare for technical interviews. The platform allows users to upload their resumes, analyze targeted job descriptions to detect technical skill gaps, and generate customized interview questions alongside ATS-optimized resume PDFs using generative AI. 
 
----
-
-## 🌟 Key Highlights
-
-* 🔐 Secure authentication system with JWT & token invalidation
-* 📄 Resume upload, parsing & skill extraction
-* 🤖 AI-powered interview question generation
-* 📊 Skill gap analysis based on job descriptions
-* 🧾 ATS-optimized resume generation
-* 📑 Dynamic PDF creation using Puppeteer
-* ⚡ Scalable full-stack architecture
+Rather than acting as a simple API wrapper, the platform implements runtime schema validation, an isolated server-side document compilation pipeline, and stateless secure session management.
 
 ---
 
-## 🛠 Tech Stack
+## 🏛 System Architecture & Design Patterns
+
+The platform implements a highly decoupled, strict **4-Layer Architecture** across both sides of the network boundary to isolate execution contexts, maintain clean error boundaries, and manage state deterministically.
+
+
+   [ CLIENT LAYER ]  <-->  [ SERVICE LAYER / API CLIENT ]
+
+```
+
+[ STATE / CONTEXT LAYER ] <-->  [ CUSTOM HOOKS (useAuth, useInterview) ]
+
+======================== NETWORK BOUNDARY ========================
+
+[ CONTROLLER LAYER ]    <-->   [ ROUTING / EXPRESS MIDDLEWARE ]
+▲                               ▲
+▼                               ▼
+[ AI & PDF ENGINES ]   <-->    [ DATA LAYER (Mongoose Models) ]
+
+```
+
+### 🧱 Core Engineering Implementations
+
+*   **Deterministic GenAI Pipelines (Zod + Gemini):** Integrates the **Gemini API** for resume parsing and skill extraction. To eliminate LLM JSON formatting inconsistencies or hallucinations, response formats are strictly validated at runtime using **Zod schemas** before persisting data to MongoDB.
+*   **Server-Side Document Generation Pipeline:** Ingests unstructured candidate resumes via multipart/form-data processing using **Multer**. Following AI analysis, the backend triggers a server-side **Puppeteer** pipeline that spins up a headless browser instance to render a structured HTML/CSS template directly into an ATS-optimized PDF binary stream for the client.
+*   **State Rehydration & Route Guarding:** Uses React Context and custom hooks (`useAuth`, `useInterview`) to handle global application states. Features an automated rehydration loop backing a backend `/getMe` routing context, preventing application state loss on manual browser refreshes while securing views via client-side `ProtectedRoute` wrappers.
+
+---
+
+## 🛠 Tech Stack & Core Subsystems
 
 ### Frontend
+*   **Core Engine:** React.js (v18), Vite, React Router v6
+*   **State Management:** React Context API (Global State Machines) + Custom Hook Abstractions
+*   **Design System:** Tailwind CSS configured with a dark-mode layout, glassmorphic UI shells, premium responsive sidebars/navbars, custom validation toasts, and dynamic overlay animations.
 
-* React.js (Vite)
-* Context API
-* Axios
-
-### Backend
-
-* Node.js
-* Express.js
-
-### Database
-
-* MongoDB Atlas
-
-### Authentication
-
-* JWT (JSON Web Tokens)
-* Token Blacklisting
-
-### AI Integration
-
-* Gemini API
-
-### Other Tools
-
-* Puppeteer (PDF generation)
-* Multer (file uploads)
-* Zod (schema validation)
+### Backend Infrastructure
+*   **Runtime Framework:** Node.js + Express.js Framework
+*   **Database Engine:** MongoDB Atlas managed via Mongoose ODM
+*   **File Streaming:** Multer (Memory Buffer Storage Ingestion)
+*   **Automation Engine:** Puppeteer (Headless Chromium Server Orchestration)
 
 ---
 
-## 🧠 Core Features
+## 🔒 Security Hardening & DevOps Operations
 
-### 🔐 Authentication System
-
-* User registration & login
-* Secure session handling with JWT
-* Logout using token blacklisting
-
----
-
-### 📄 Resume Analysis
-
-* Upload resumes (PDF)
-* Extract structured data & skills
-* Prepare data for AI processing
+*   **Stateless Distributed Security:** Powered by secure JSON Web Tokens (JWT) passing through HTTP-Only cookies to protect client sessions against Cross-Site Scripting (XSS) risks.
+*   **Token Blacklisting Protocol:** Handles secure session termination by tracking invalidated tokens in a high-speed MongoDB collection leveraging automatic **TTL (Time-To-Live) indexes** that expire concurrent with the JWT lifetime, ensuring zero database bloat.
+*   **CORS Normalization:** Explicitly configures Cross-Origin Resource Sharing handling to resolve development and production domain origin mismatches (e.g., handling trailing slash discrepancies in deployment).
+*   **Automated Continuous Deployment:** Configured via structural infrastructure blueprints for automated backend deployment on Render and automated single-page application hosting on Vercel.
 
 ---
 
-### 🤖 AI Interview Generator
+## 📂 Repository Structure
 
-* Generate role-specific interview questions
-* Create structured interview reports
-* Store and retrieve reports
+```filepath
+├── backend/
+│   ├── config/             # Database connectivity & environmental setup
+│   ├── controllers/        # Request handlers (Auth, Interview processing, PDF engine)
+│   ├── middleware/         # Security checks, JWT verification, and route guards
+│   ├── models/             # Mongoose schemas (User, Blacklist, InterviewReport)
+│   ├── routes/             # Express API endpoints mapping controllers
+│   └── services/           # External API integrations (Gemini, Puppeteer core)
+└── frontend/
+    ├── src/
+    │   ├── components/     # UI components (Sidebar navigation, charts, forms)
+    │   ├── context/        # Global state machines (AuthContext, InterviewContext)
+    │   ├── hooks/          # Custom hooks handling state abstraction and two-way binding
+    │   ├── services/       # Modular API client layers using Axios
+    │   └── styles/         # Global design utilities and responsive layouts
 
----
-
-### 📊 Skill Gap Detection
-
-* Compare resume vs job description
-* Identify missing skills using AI
-
----
-
-### 🧾 Resume Builder (ATS-Friendly)
-
-* Generate optimized resumes
-* Improve job selection chances
-
----
-
-### 📑 PDF Generation Pipeline
-
-* Convert AI-generated content into PDFs
-* Fully automated backend pipeline
-
----
-
-## 🏗️ Architecture
-
-```
-Client (React)
-   ↓
-Service Layer (Axios APIs)
-   ↓
-Backend (Node + Express)
-   ↓
-AI Layer (Gemini API)
-   ↓
-Database (MongoDB)
 ```
 
 ---
 
-## 📂 Project Structure
+## ⚙️ Local Setup Instructions
 
-```
-client/
- ├── components/
- ├── pages/
- ├── hooks/
- ├── context/
- └── services/
+### 1. Prerequisites
 
-server/
- ├── controllers/
- ├── routes/
- ├── models/
- ├── middleware/
- ├── services/
- └── utils/
-```
+* Node.js (v18 or higher)
+* MongoDB instance (Local or Atlas cluster)
 
----
+### 2. Environment Variables
 
-## ⚙️ Installation & Setup
+Create a `.env` file in your `backend` directory:
 
-### 1. Clone Repository
-
-```bash
-git clone https://github.com/gativarshney/interview-ai.git
-cd interview-ai
-```
-
----
-
-### 2. Backend Setup
-
-```bash
-cd server
-npm install
-```
-
-Create `.env` file:
-
-```
+```env
 PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret
-GEMINI_API_KEY=your_api_key
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_signing_secret
+GEMINI_API_KEY=your_gemini_api_key
+FRONTEND_URL=http://localhost:5173
+
 ```
 
-Run server:
+### 3. Execution Protocols
+
+#### Start the Backend API Server:
 
 ```bash
-npm run dev
-```
-
----
-
-### 3. Frontend Setup
-
-```bash
-cd client
+cd backend
 npm install
 npm run dev
+
 ```
 
----
+#### Start the Frontend Client:
 
-## 🔌 API Overview
+```bash
+cd frontend
+npm install
+npm run dev
 
-### Auth
+```
 
-* `POST /api/auth/register`
-* `POST /api/auth/login`
-* `POST /api/auth/logout`
-* `GET /api/auth/me`
-
-### Interview
-
-* `POST /api/interview/generate`
-* `GET /api/interview/:id`
-* `GET /api/interview`
-
-### Resume
-
-* `POST /api/resume/generate-pdf`
-
----
-
-## 🚧 Current Status
-
-> ⚠️ This project is actively under development.
-
-Upcoming improvements:
-
-* UI/UX enhancements
-* Advanced AI evaluation logic
-* Real-time mock interviews
-* Performance optimizations
-
----
-
-## 🎯 What I Learned
-
-* Building **production-ready full stack systems**
-* Implementing **secure authentication flows**
-* Integrating **Generative AI into real applications**
-* Designing **scalable backend architecture**
-* Handling **file uploads & PDF generation pipelines**
-
----
-
-## 🔮 Future Scope
-
-* 🎤 Voice-based AI mock interviews
-* 📈 Performance analytics dashboard
-* 🎯 Personalized job recommendations
-* 🧠 AI-based learning roadmap
+The platform will automatically spin up on `http://localhost:5173`.
