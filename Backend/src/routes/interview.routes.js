@@ -38,4 +38,12 @@ interviewRouter.post("/resume/pdf/:interviewReportId", authMiddleware.authUser, 
 
 
 
+/**
+ * @route POST /api/interview/practice/evaluate
+ * @description evaluate practice answer.
+ * @access private
+ */
+interviewRouter.post("/practice/evaluate", authMiddleware.authUser, interviewController.evaluateAnswerController)
+
+
 module.exports = interviewRouter

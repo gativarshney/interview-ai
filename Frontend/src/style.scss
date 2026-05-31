@@ -4,20 +4,20 @@
 @import './features/interview/styles/landing';
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #101f33;
-  background-color: #eef2f5;
-  --background: #eef2f5;
-  --surface: #ffffff;
-  --surface-soft: #f5f7f9;
-  --text-primary: #101f33;
-  --text-secondary: #5c7082;
-  --border: rgba(16, 36, 60, 0.12);
-  --primary: #0c3d66;
+  color: #e6edf3;
+  background-color: #0d1117;
+  --background: #0d1117;
+  --surface: #161b22;
+  --surface-soft: #1c2230;
+  --text-primary: #e6edf3;
+  --text-secondary: #7d8590;
+  --border: #2a3348;
+  --primary: #ff2d78;
   --accent: #0c9c8a;
   --danger: #d64545;
-  --shadow: rgba(16, 36, 60, 0.08);
+  --shadow: rgba(0, 0, 0, 0.3);
 }
 
 * {

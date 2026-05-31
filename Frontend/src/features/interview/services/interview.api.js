@@ -57,3 +57,11 @@ export const generateResumePdf = async ({ interviewReportId }) => {
 
     return response.data
 }
+
+/**
+ * @description Service to evaluate candidate's practice answer against job description and mock questions.
+ */
+export const evaluatePracticeAnswer = async ({ question, answer, jobDescription }) => {
+    const response = await api.post("/api/interview/practice/evaluate", { question, answer, jobDescription })
+    return response.data
+}

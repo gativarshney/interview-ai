@@ -1,4 +1,4 @@
-import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf } from "../services/interview.api"
+import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf, evaluatePracticeAnswer } from "../services/interview.api"
 import { useContext, useEffect } from "react"
 import { InterviewContext } from "../interview.context"
 import { useParams } from "react-router-dom"
@@ -140,14 +140,32 @@ export const useInterview = () => {
         }
     }
 
+    const evaluateAnswer = async ({ question, answer, jobDescription }) => {
+        try {
+            const response = await evaluatePracticeAnswer({ question, answer, jobDescription })
+            return response.evaluation ?? null
+        } catch (error) {
+            console.error('evaluateAnswer error:', error)
+            const msg = error.response?.data?.message || 'Failed to submit practice answer. Please try again.'
+            showToast(msg, 'error')
+            return null
+        }
+    }
+
     useEffect(() => {
         if (interviewId) {
-            getReportById(interviewId)
+            if (!report || report._id !== interviewId) {
+                getReportById(interviewId)
+            }
         } else {
             getReports()
         }
-    }, [ interviewId ])
+    }, [ interviewId, report ])
 
-    return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf }
+    return { 
+        loading, report, reports, 
+        pdfGenerating, pdfStep, pdfError, 
+        generateReport, getReportById, getReports, getResumePdf, evaluateAnswer 
+    }
 
 }

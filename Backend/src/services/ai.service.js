@@ -109,14 +109,24 @@ const interviewReportJsonSchema = {
     required: ["title", "matchScore", "technicalQuestions", "behavioralQuestions", "skillGaps", "preparationPlan"]
 }
 
+function tryParseJson(value) {
+    if (typeof value === "string" && value.trim().startsWith("{")) {
+        try {
+            return JSON.parse(value)
+        } catch (e) {}
+    }
+    return value
+}
+
 function normalizeTechnicalQuestions(value) {
     if (!Array.isArray(value)) return []
     return value.map((item, index) => {
-        if (typeof item === "object" && item !== null) {
+        const parsed = tryParseJson(item)
+        if (typeof parsed === "object" && parsed !== null) {
             return {
-                question: String(item.question || item.text || item.prompt || `Technical question ${index + 1}`),
-                intention: String(item.intention || item.goal || "Assess the candidate's technical reasoning and problem-solving approach."),
-                answer: String(item.answer || item.response || "Provide a concise explanation of the candidate's approach."),
+                question: String(parsed.question || parsed.text || parsed.prompt || `Technical question ${index + 1}`),
+                intention: String(parsed.intention || parsed.goal || "Assess the candidate's technical reasoning and problem-solving approach."),
+                answer: String(parsed.answer || parsed.response || "Provide a concise explanation of the candidate's approach."),
             }
         }
         const text = String(item || `Technical question ${index + 1}`)
@@ -131,11 +141,12 @@ function normalizeTechnicalQuestions(value) {
 function normalizeBehavioralQuestions(value) {
     if (!Array.isArray(value)) return []
     return value.map((item, index) => {
-        if (typeof item === "object" && item !== null) {
+        const parsed = tryParseJson(item)
+        if (typeof parsed === "object" && parsed !== null) {
             return {
-                question: String(item.question || item.text || `Behavioral question ${index + 1}`),
-                intention: String(item.intention || item.goal || "Understand the candidate's teamwork and communication skills."),
-                answer: String(item.answer || item.response || "Describe a relevant experience clearly and concisely."),
+                question: String(parsed.question || parsed.text || `Behavioral question ${index + 1}`),
+                intention: String(parsed.intention || parsed.goal || "Understand the candidate's teamwork and communication skills."),
+                answer: String(parsed.answer || parsed.response || "Describe a relevant experience clearly and concisely."),
             }
         }
         const text = String(item || `Behavioral question ${index + 1}`)
@@ -150,10 +161,11 @@ function normalizeBehavioralQuestions(value) {
 function normalizeSkillGaps(value) {
     if (!Array.isArray(value)) return []
     return value.map((item, index) => {
-        if (typeof item === "object" && item !== null) {
+        const parsed = tryParseJson(item)
+        if (typeof parsed === "object" && parsed !== null) {
             return {
-                skill: String(item.skill || item.name || `Skill gap ${index + 1}`),
-                severity: ["low", "medium", "high"].includes(String(item.severity).toLowerCase()) ? String(item.severity).toLowerCase() : "medium",
+                skill: String(parsed.skill || parsed.name || `Skill gap ${index + 1}`),
+                severity: ["low", "medium", "high"].includes(String(parsed.severity).toLowerCase()) ? String(parsed.severity).toLowerCase() : "medium",
             }
         }
         return {
@@ -166,11 +178,12 @@ function normalizeSkillGaps(value) {
 function normalizePreparationPlan(value) {
     if (!Array.isArray(value)) return []
     return value.map((item, index) => {
-        if (typeof item === "object" && item !== null) {
+        const parsed = tryParseJson(item)
+        if (typeof parsed === "object" && parsed !== null) {
             return {
-                day: Number.isFinite(Number(item.day)) ? Number(item.day) : index + 1,
-                focus: String(item.focus || item.goal || `Day ${index + 1} focus`),
-                tasks: Array.isArray(item.tasks) ? item.tasks.map(String) : [String(item.task || item.activity || "Review and practice relevant concepts.")],
+                day: Number.isFinite(Number(parsed.day)) ? Number(parsed.day) : index + 1,
+                focus: String(parsed.focus || parsed.goal || `Day ${index + 1} focus`),
+                tasks: Array.isArray(parsed.tasks) ? parsed.tasks.map(String) : [String(parsed.task || parsed.activity || "Review and practice relevant concepts.")],
             }
         }
         return {
@@ -272,4 +285,106 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
 
 }
 
-module.exports = { generateInterviewReport, generateResumePdf }
+const answerEvaluationJsonSchema = {
+    type: "OBJECT",
+    properties: {
+        rating: {
+            type: "STRING",
+            enum: ["Excellent", "Good", "Needs Improvement"],
+            description: "Quality rating of the candidate's answer."
+        },
+        strengths: {
+            type: "ARRAY",
+            description: "Bullet points detailing what the candidate did well, such as specific terms, STAR structure alignment, or logical flow.",
+            items: { type: "STRING" }
+        },
+        improvements: {
+            type: "ARRAY",
+            description: "Bullet points detailing missing keywords, logical gaps, or areas of STAR structure to refine.",
+            items: { type: "STRING" }
+        },
+        suggestedRevision: {
+            type: "STRING",
+            description: "A professional, refined, STAR-method aligned rewrite of the candidate's response that is suitable for a FAANG interview."
+        }
+    },
+    required: ["rating", "strengths", "improvements", "suggestedRevision"]
+}
+
+async function evaluatePracticeAnswer({ question, answer, jobDescription }) {
+    try {
+        const prompt = `You are an expert FAANG technical recruiter and executive interview coach. 
+Evaluate the candidate's practice answer for the following question, aligned with the target job description.
+
+Target Job Description:
+${jobDescription}
+
+Interview Question:
+${question}
+
+Candidate's Answer:
+${answer}
+
+Assess the answer thoroughly using professional interview standards, looking for:
+1. STAR method alignment (Situation, Task, Action, Result).
+2. Presence of critical technical or domain keywords.
+3. Logical reasoning, clarity, and conciseness.
+
+Return a valid JSON object matching the requested schema. Provide deep, constructive, and realistic feedback. 
+In the "suggestedRevision" field, rewrite their response in a highly refined, professional format that is tailored for senior FAANG recruiters.`
+
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: answerEvaluationJsonSchema,
+            }
+        })
+
+        const result = JSON.parse(response.text)
+
+        return {
+            rating: ["Excellent", "Good", "Needs Improvement"].includes(result.rating) ? result.rating : "Good",
+            strengths: Array.isArray(result.strengths) ? result.strengths.map(String) : ["Answer provided some domain context."],
+            improvements: Array.isArray(result.improvements) ? result.improvements.map(String) : ["Consider structuring your answer with more specific metrics."],
+            suggestedRevision: result.suggestedRevision || "A highly refined STAR rewrite is unavailable."
+        }
+    } catch (error) {
+        console.error("Error in evaluatePracticeAnswer AI service:", error)
+        throw error
+    }
+}
+
+async function generateResumeHtml({ resume, selfDescription, jobDescription }) {
+    const resumePdfSchema = z.object({
+        html: z.string().describe("The HTML content of the resume which can be converted to PDF using any library like puppeteer")
+    })
+
+    const prompt = `Generate resume for a candidate with the following details:
+                        Resume: ${resume}
+                        Self Description: ${selfDescription}
+                        Job Description: ${jobDescription}
+
+                        the response should be a JSON object with a single field "html" which contains the HTML content of the resume which can be converted to PDF using any library like puppeteer.
+                        The resume should be tailored for the given job description and should highlight the candidate's strengths and relevant experience. The HTML content should be well-formatted and structured, making it easy to read and visually appealing.
+                        The content of resume should be not sound like it's generated by AI and should be as close as possible to a real human-written resume.
+                        you can highlight the content using some colors or different font styles but the overall design should be simple and professional.
+                        The content should be ATS friendly, i.e. it should be easily parsable by ATS systems without losing important information.
+                        The resume should not be so lengthy, it should ideally be 1-2 pages long when converted to PDF. Focus on quality rather than quantity and make sure to include all the relevant information that can increase the candidate's chances of getting an interview call for the given job description.
+                    `
+
+    const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: zodToJsonSchema(resumePdfSchema),
+        }
+    })
+
+    const jsonContent = JSON.parse(response.text)
+    return jsonContent.html
+}
+
+module.exports = { generateInterviewReport, generateResumePdf, evaluatePracticeAnswer, generateResumeHtml, generatePdfFromHtml }

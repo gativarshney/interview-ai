@@ -1,5 +1,5 @@
 const pdfParse = require("pdf-parse")
-const { generateInterviewReport, generateResumePdf } = require("../services/ai.service")
+const { generateInterviewReport, generateResumePdf, evaluatePracticeAnswer, generateResumeHtml, generatePdfFromHtml } = require("../services/ai.service")
 const interviewReportModel = require("../models/interviewReport.model")
 
 /**
@@ -101,26 +101,76 @@ async function getAllInterviewReportsController(req, res) {
  * @description Controller to generate resume PDF based on user self description, resume and job description.
  */
 async function generateResumePdfController(req, res) {
-    const { interviewReportId } = req.params
+    try {
+        const { interviewReportId } = req.params
 
-    const interviewReport = await interviewReportModel.findById(interviewReportId)
+        const interviewReport = await interviewReportModel.findById(interviewReportId)
 
-    if (!interviewReport) {
-        return res.status(404).json({
-            message: "Interview report not found."
+        if (!interviewReport) {
+            return res.status(404).json({
+                message: "Interview report not found."
+            })
+        }
+
+        const { resume, jobDescription, selfDescription } = interviewReport
+
+        let pdfBuffer;
+        if (interviewReport.tailoredResumeHtml) {
+            console.log(`[Cache Hit] Compiling PDF from pre-stored tailored resume HTML for report ${interviewReportId}...`)
+            pdfBuffer = await generatePdfFromHtml(interviewReport.tailoredResumeHtml)
+        } else {
+            console.log(`[Cache Miss] Fetching new resume HTML from Gemini for report ${interviewReportId}...`)
+            const resumeHtml = await generateResumeHtml({ resume, jobDescription, selfDescription })
+            pdfBuffer = await generatePdfFromHtml(resumeHtml)
+
+            // Cache the generated HTML in the database to prevent duplicate Gemini API calls
+            interviewReport.tailoredResumeHtml = resumeHtml
+            await interviewReport.save()
+            console.log(`[Cache Success] Cached resume HTML in DB for report ${interviewReportId}`)
+        }
+
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": `attachment; filename=resume_${interviewReportId}.pdf`
         })
+
+        res.send(pdfBuffer)
+    } catch (error) {
+        console.error("Error in generateResumePdfController:", error)
+        res.status(500).json({ message: "Failed to compile resume. " + error.message })
     }
-
-    const { resume, jobDescription, selfDescription } = interviewReport
-
-    const pdfBuffer = await generateResumePdf({ resume, jobDescription, selfDescription })
-
-    res.set({
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename=resume_${interviewReportId}.pdf`
-    })
-
-    res.send(pdfBuffer)
 }
 
-module.exports = { generateInterViewReportController, getInterviewReportByIdController, getAllInterviewReportsController, generateResumePdfController }
+async function evaluateAnswerController(req, res) {
+    try {
+        const { question, answer, jobDescription } = req.body
+
+        if (!question) {
+            return res.status(400).json({ message: "question is required." })
+        }
+        if (!answer) {
+            return res.status(400).json({ message: "answer is required." })
+        }
+        if (!jobDescription) {
+            return res.status(400).json({ message: "jobDescription is required." })
+        }
+
+        const evaluation = await evaluatePracticeAnswer({ question, answer, jobDescription })
+
+        res.status(200).json({
+            message: "Answer evaluated successfully.",
+            evaluation
+        })
+    } catch (error) {
+        console.error("Error in evaluateAnswerController:", error)
+        res.status(500).json({ message: "Failed to evaluate answer. " + error.message })
+    }
+}
+
+module.exports = { 
+    generateInterViewReportController, 
+    getInterviewReportByIdController, 
+    getAllInterviewReportsController, 
+    generateResumePdfController,
+    evaluateAnswerController
+}
