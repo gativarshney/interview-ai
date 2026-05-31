@@ -5,61 +5,62 @@ import useAuth from '../hooks/useAuth'
 
 const Login = () => {
   const navigate = useNavigate()
-
   const { loading, handleLogin } = useAuth()
 
-    const [ email, setEmail ] = useState("")
-    const [ password, setPassword ] = useState("")
+  const [ email, setEmail ] = useState("")
+  const [ password, setPassword ] = useState("")
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const success = await handleLogin({email,password})
-        if(success) {
-          navigate('/')
-        }
-    }
+  const handleSubmit = async (e) => {
+      e.preventDefault()
+      const success = await handleLogin({email,password})
+      if(success) {
+        navigate('/')
+      }
+  }
 
   if(loading){
     return (
       <div className="spinner-overlay">
         <div className="premium-spinner"></div>
-        <span className="spinner-text">Signing in...</span>
+        <span className="spinner-text">Signing in to InterviewOS...</span>
       </div>
     )
   }
 
   return (
-    <main className="login-page">
-      <section className="login-card" aria-label="Login form">
-        <div className="brand-panel">
-          <span className="brand-mark" aria-hidden="true">
-            IA
-          </span>
-          <div>
-            <p className="brand-label">Interview AI</p>
-            <h1>Welcome back</h1>
+    <main className="login-page-container">
+      {/* Cinematic background glows */}
+      <div className='mesh-glow mesh-glow--magenta' />
+      <div className='mesh-glow mesh-glow--teal' />
+
+      <section className="login-glass-card" aria-label="Login form">
+        <div className="auth-brand-header">
+          <div className="auth-brand-badge">
+            <span className="auth-brand-dot" />
+            <span className="auth-brand-text">Interview<span className="auth-brand-text-accent">OS</span></span>
           </div>
+          <h1>Welcome back</h1>
+          <p className="auth-card-subtitle">
+            Sign in to access your custom strategies and simulation blueprints.
+          </p>
         </div>
 
-        <p className="card-subtitle">
-          Sign in to access your interview insights and company reviews.
-        </p>
-
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
+        <form onSubmit={handleSubmit} className="auth-form-flow">
+          <div className="auth-input-group">
+            <label htmlFor="email">Email Address</label>
             <input
               type="email"
               id="email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder="name@company.com"
               autoComplete="username"
+              required
             />
           </div>
 
-          <div className="input-group">
+          <div className="auth-input-group">
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -67,22 +68,24 @@ const Login = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
+              placeholder="••••••••••••"
               autoComplete="current-password"
+              required
             />
           </div>
 
-          <button type="submit" className="button primary-button">
-            Login
+          <button type="submit" className="auth-submit-gradient-btn">
+            Sign In
           </button>
 
-          <div className="login-footer">
-            <Link to="/register" className="secondary-link">
-              Don't have an account? Register
+          <div className="auth-links-footer">
+            <Link to="/register" className="auth-footer-link">
+              Don't have an account? <span className="highlight-text">Register</span>
             </Link>
-            <Link to="/register" className="secondary-link">
+            <span className="auth-links-separator">&bull;</span>
+            <a href="#" className="auth-footer-link">
               Need help?
-            </Link>
+            </a>
           </div>
         </form>
       </section>
