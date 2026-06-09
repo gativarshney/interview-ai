@@ -25,7 +25,7 @@ const Register = () => {
     return (
       <div className="spinner-overlay">
         <div className="premium-spinner"></div>
-        <span className="spinner-text">Creating your InterviewOS account...</span>
+        <span className="spinner-text">Creating your Interview Copilot account...</span>
       </div>
     )
   }
@@ -40,11 +40,11 @@ const Register = () => {
         <div className="auth-brand-header">
           <div className="auth-brand-badge">
             <span className="auth-brand-dot" />
-            <span className="auth-brand-text">Interview<span className="auth-brand-text-accent">OS</span></span>
+            <span className="auth-brand-text">Interview<span className="auth-brand-text-accent"> Copilot</span></span>
           </div>
           <h1>Create account</h1>
           <p className="auth-card-subtitle">
-            Start your personalized MAANG preparation roadmap with InterviewOS.
+            Start your personalized MAANG preparation roadmap with Interview Copilot.
           </p>
         </div>
 

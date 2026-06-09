@@ -141,7 +141,7 @@ const Home = () => {
                 <div className="nav-top-row">
                     <div className='nav-brand' onClick={() => navigate('/')}>
                         <div className='brand-glow-dot' />
-                        <span className='brand-text-main'>Interview<span className='brand-text-accent'>OS</span></span>
+                        <span className='brand-text-main'>Interview<span className='brand-text-accent'> Copilot</span></span>
                     </div>
 
                     {/* Hamburger Button for Mobile floating capsule */}
@@ -185,7 +185,7 @@ const Home = () => {
                 </div>
 
                 <h1 className='main-hero-title'>
-                    Interview<span className='gradient-accent-text'>OS</span>
+                    Interview<span className='gradient-accent-text'> Copilot</span>
                     <span className='sub-hero-title'>AI Super-Agent for Tech Candidates</span>
                 </h1>
 
@@ -222,7 +222,7 @@ const Home = () => {
                             <span className='control-circle control-circle--minimize' />
                             <span className='control-circle control-circle--maximize' />
                         </div>
-                        <span className='macos-window-title'>interviewos_workspace.sh</span>
+                        <span className='macos-window-title'>interviewcopilot_workspace.sh</span>
                     </div>
 
                     {/* Interactive Form Panel Container */}
@@ -447,7 +447,7 @@ const Home = () => {
                     <span className='footer-links-bullet'>&bull;</span>
                     <a href='#' className='footer-link-item'>Help Center</a>
                 </div>
-                <p className='footer-copyright-text'>&copy; {new Date().getFullYear()} InterviewOS AI. All rights reserved.</p>
+                <p className='footer-copyright-text'>&copy; {new Date().getFullYear()} Interview Copilot. All rights reserved.</p>
             </footer>
         </div>
     )

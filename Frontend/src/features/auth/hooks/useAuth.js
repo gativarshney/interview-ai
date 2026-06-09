@@ -40,7 +40,7 @@ const useAuth = () => {
             }
             const data = await register({username, email, password});
             setUser(data.user);
-            showToast("Account created successfully! Welcome to Interview-AI.", "success");
+            showToast("Account created successfully! Welcome to Interview Copilot.", "success");
             return true;
         }
         catch(err){

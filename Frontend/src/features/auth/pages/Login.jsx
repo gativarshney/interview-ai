@@ -22,7 +22,7 @@ const Login = () => {
     return (
       <div className="spinner-overlay">
         <div className="premium-spinner"></div>
-        <span className="spinner-text">Signing in to InterviewOS...</span>
+        <span className="spinner-text">Signing in to Interview Copilot...</span>
       </div>
     )
   }
@@ -37,7 +37,7 @@ const Login = () => {
         <div className="auth-brand-header">
           <div className="auth-brand-badge">
             <span className="auth-brand-dot" />
-            <span className="auth-brand-text">Interview<span className="auth-brand-text-accent">OS</span></span>
+            <span className="auth-brand-text">Interview<span className="auth-brand-text-accent"> Copilot</span></span>
           </div>
           <h1>Welcome back</h1>
           <p className="auth-card-subtitle">
