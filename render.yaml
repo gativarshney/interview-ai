@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: interview-ai-backend
+    name: interview-copilot-backend
     env: node
     plan: free
     rootDir: Backend

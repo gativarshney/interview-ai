@@ -58,8 +58,8 @@ const Landing = () => {
             <header className="landing-navbar">
                 <div className="nav-container">
                     <div className="brand-logo" onClick={() => navigate('/')}>
-                        <span className="logo-icon">IA</span>
-                        <span className="logo-text">Interview AI</span>
+                        <span className="logo-icon">IC</span>
+                        <span className="logo-text">Interview Copilot</span>
                     </div>
                     <nav className="nav-links">
                         <button onClick={() => scrollSection('overview')}>Overview</button>
@@ -157,11 +157,11 @@ const Landing = () => {
                             <span className="mockup-dot red"></span>
                             <span className="mockup-dot yellow"></span>
                             <span className="mockup-dot green"></span>
-                            <div className="mockup-title">dashboard.interview-ai.app</div>
+                            <div className="mockup-title">dashboard.interviewcopilot.app</div>
                         </div>
                         <div className="mockup-content">
                             <div className="mockup-sidebar">
-                                <div className="mockup-logo">IA</div>
+                                <div className="mockup-logo">IC</div>
                                 <div className="mockup-menu-item active">Dashboard</div>
                                 <div className="mockup-menu-item">Strategies</div>
                                 <div className="mockup-menu-item">Resume Intelligence</div>
@@ -212,7 +212,7 @@ const Landing = () => {
             <section id="overview" className="section-padding overview-section">
                 <div className="section-header">
                     <h2>Unparalleled Intelligence. <br />Better Prep.</h2>
-                    <p>Traditional mock interview tools drills you with generic, unaligned questions. Interview-AI synthesizes structured strategy blueprints customized to your unique profile and the target job description.</p>
+                    <p>Traditional mock interview tools drills you with generic, unaligned questions. Interview Copilot synthesizes structured strategy blueprints customized to your unique profile and the target job description.</p>
                 </div>
             </section>
 
@@ -325,7 +325,7 @@ const Landing = () => {
                         </div>
                     </div>
                     <div className="t-card">
-                        <p className="quote">"I was struggling to tailor my backend profile for different fintech companies. With Interview-AI, I generated tailored strategies for Stripe and Notion, achieving an immediate lift in response rates."</p>
+                        <p className="quote">"I was struggling to tailor my backend profile for different fintech companies. With Interview Copilot, I generated tailored strategies for Stripe and Notion, achieving an immediate lift in response rates."</p>
                         <div className="t-author">
                             <strong>Michael Chang</strong>
                             <span>Backend Engineer at Stripe</span>
@@ -403,8 +403,8 @@ const Landing = () => {
             <footer className="landing-footer">
                 <div className="footer-container">
                     <div className="footer-brand">
-                        <span className="logo-icon">IA</span>
-                        <p>&copy; {new Date().getFullYear()} Interview AI. All rights reserved. Built for engineering excellence.</p>
+                        <span className="logo-icon">IC</span>
+                        <p>&copy; {new Date().getFullYear()} Interview Copilot. All rights reserved. Built for engineering excellence.</p>
                     </div>
                     <div className="footer-links">
                         <a href="#">Privacy Policy</a>
