@@ -276,10 +276,6 @@ Report sub-documents (questions, skill gaps, plan days) are embedded rather than
 - Logout invalidates the token server-side via a blacklist collection, rather than relying solely on client-side cookie removal.
 - CORS is restricted to a configured `FRONTEND_URL` plus local dev origins.
 
-## Testing
-
-No automated test suite is currently configured for either the frontend or backend. `npm test` in `Backend` is a placeholder script.
-
 ## Roadmap
 
 ### Implemented
