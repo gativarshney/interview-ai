@@ -17,7 +17,7 @@ const Register = () => {
     event.preventDefault()
     const success = await handleRegister(formData)
     if (success) {
-      navigate('/')
+      navigate('/dashboard')
     }
   }
 
@@ -44,7 +44,7 @@ const Register = () => {
           </div>
           <h1>Create account</h1>
           <p className="auth-card-subtitle">
-            Start your personalized MAANG preparation roadmap with Interview Copilot.
+            Start your personalized interview preparation with Interview Copilot.
           </p>
         </div>
 

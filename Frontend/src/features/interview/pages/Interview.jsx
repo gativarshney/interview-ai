@@ -239,7 +239,7 @@ const Interview = () => {
                         <button
                             type="button"
                             className="interview-nav__item"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/dashboard')}
                             style={{ 
                                 marginBottom: '1.25rem', 
                                 borderBottom: '1px solid rgba(255, 255, 255, 0.05)', 
@@ -368,7 +368,7 @@ const Interview = () => {
             <div className='interview-mobile-layout'>
                 {/* Mobile Header Row */}
                 <header className='mobile-interview-header'>
-                    <button type="button" className='mobile-back-btn' onClick={() => navigate('/')}>
+                    <button type="button" className='mobile-back-btn' onClick={() => navigate('/dashboard')}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="19" y1="12" x2="5" y2="12"></line>
                             <polyline points="12 19 5 12 12 5"></polyline>

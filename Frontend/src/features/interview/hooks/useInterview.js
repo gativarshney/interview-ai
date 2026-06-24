@@ -4,6 +4,21 @@ import { InterviewContext } from "../interview.context"
 import { useParams } from "react-router-dom"
 import { useToast } from "../components/Toast.jsx"
 
+const toFriendlyError = (raw = '') => {
+    const msg = raw.toLowerCase()
+    if (msg.includes('browser') || msg.includes('chrome') || msg.includes('puppeteer') || msg.includes('executable'))
+        return 'Our PDF generator is currently unavailable. Please try again in a moment.'
+    if (msg.includes('timeout') || msg.includes('timed out'))
+        return 'The request timed out. Please try again.'
+    if (msg.includes('not found') || msg.includes('404'))
+        return 'Interview report not found. Please go back and try again.'
+    if (msg.includes('unauthorized') || msg.includes('401') || msg.includes('403'))
+        return 'Your session has expired. Please log in again.'
+    if (msg.includes('resume') || msg.includes('pdf') || msg.includes('html'))
+        return 'Failed to generate the resume PDF. Please try again.'
+    return 'Something went wrong on our end. Please try again in a moment.'
+}
+
 
 export const useInterview = () => {
 
@@ -130,8 +145,20 @@ export const useInterview = () => {
         catch (error) {
             clearInterval(timer)
             console.error('getResumePdf error:', error)
-            setPdfError(error.message || 'Failed to compile ATS-optimized PDF resume.')
-            showToast('Failed to compile ATS-optimized PDF resume. Please try again.', 'error')
+            let friendlyMessage = 'Something went wrong while generating your resume. Please try again.'
+            try {
+                if (error.response?.data instanceof Blob) {
+                    const text = await error.response.data.text()
+                    const json = JSON.parse(text)
+                    if (json.message) friendlyMessage = toFriendlyError(json.message)
+                } else if (error.response?.data?.message) {
+                    friendlyMessage = toFriendlyError(error.response.data.message)
+                } else if (!error.response) {
+                    friendlyMessage = 'Unable to reach the server. Please check your connection and try again.'
+                }
+            } catch {}
+            setPdfError(friendlyMessage)
+            showToast(friendlyMessage, 'error')
             await new Promise(r => setTimeout(r, 3000))
         } finally {
             setPdfGenerating(false)

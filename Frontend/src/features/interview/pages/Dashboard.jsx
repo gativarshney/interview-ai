@@ -246,7 +246,7 @@ const Dashboard = () => {
                     </h1>
                     
                     <p className="copilot-subtitle">
-                        Your FAANG-grade prep companion. Optimize your resume keyword alignment, synthesize dynamic daily study roadmaps, or practice targeted mock questions.
+                        Your AI-powered interview prep companion. Optimize your resume keyword alignment, synthesize dynamic daily study roadmaps, or practice targeted mock questions.
                     </p>
 
                     {/* Highly Polished Floating Prompt Box */}

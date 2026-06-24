@@ -17,8 +17,8 @@ const FAQ_ITEMS = [
         a: "Absolutely. We secure your uploaded assets with enterprise-grade encryption. The parsed contents are only processed inside sandboxed context boundaries to compile your interview report and are never utilized to train public foundational AI models."
     },
     {
-        q: "Can I generate resumes tailored for specific FAANG companies?",
-        a: "Yes. Our AI generator extracts matching and missing keywords, cross-references target company hiring bars (such as Google's Googlyness or Amazon's Leadership Principles), and generates a fully ATS-optimized, high-fidelity PDF resume customized for that specific role."
+        q: "Can I generate a resume tailored for a specific role and company?",
+        a: "Yes. Our AI generator extracts matching and missing keywords from the job description and generates a fully ATS-optimized PDF resume customized for that specific role — whether it's a startup, mid-size company, or large enterprise."
     }
 ]
 
@@ -58,8 +58,8 @@ const Landing = () => {
             <header className="landing-navbar">
                 <div className="nav-container">
                     <div className="brand-logo" onClick={() => navigate('/')}>
-                        <span className="logo-icon">IC</span>
-                        <span className="logo-text">Interview Copilot</span>
+                        <div className="brand-glow-dot" />
+                        <span className="brand-text-main">Interview<span className="brand-text-accent"> Copilot</span></span>
                     </div>
                     <nav className="nav-links">
                         <button onClick={() => scrollSection('overview')}>Overview</button>
@@ -137,9 +137,9 @@ const Landing = () => {
             <section className="hero-section">
                 <div className="hero-container">
                     <span className="badge-promo">Next-Gen AI Interview Copilot</span>
-                    <h1>Outprepare the Competition. <br /><span className="text-gradient">Clear the FAANG Bar.</span></h1>
+                    <h1>Outprepare the Competition. <br /><span className="text-gradient">Land the Role.</span></h1>
                     <p className="hero-subtitle">
-                        Audit your resume against real-world job descriptions, target high-severity skill gaps, and unlock a customized preparation blueprint engineered for Google, Stripe, and high-growth startups.
+                        Audit your resume against real-world job descriptions, target high-severity skill gaps, and unlock a customized preparation blueprint built for your exact role and company.
                     </p>
                     <div className="hero-ctas">
                         <button className="btn-primary btn-large" onClick={handleCTA}>
@@ -211,8 +211,25 @@ const Landing = () => {
             {/* 2. Product Overview */}
             <section id="overview" className="section-padding overview-section">
                 <div className="section-header">
-                    <h2>Unparalleled Intelligence. <br />Better Prep.</h2>
-                    <p>Traditional mock interview tools drills you with generic, unaligned questions. Interview Copilot synthesizes structured strategy blueprints customized to your unique profile and the target job description.</p>
+                    <h2>The gap between prepared <br />and hired is smaller than you think.</h2>
+                    <p>Most candidates fail not because they lack skill — but because they prep without direction. Interview Copilot closes that gap with a strategy built around your actual resume and the exact role you're targeting.</p>
+                </div>
+                <div className="overview-differentiators">
+                    <div className="diff-card">
+                        <span className="diff-icon">⚡</span>
+                        <h4>Role-specific, not generic</h4>
+                        <p>Every question, gap, and roadmap is generated from your resume against the actual job description — not a one-size-fits-all template.</p>
+                    </div>
+                    <div className="diff-card">
+                        <span className="diff-icon">🎯</span>
+                        <h4>Know exactly where you fall short</h4>
+                        <p>Skill gap detection flags the precise technologies and concepts recruiters are screening for that your profile is missing.</p>
+                    </div>
+                    <div className="diff-card">
+                        <span className="diff-icon">🗓️</span>
+                        <h4>A 7-day plan, not just advice</h4>
+                        <p>You get a day-by-day structured prep blueprint — not a list of tips. Actionable tasks from Day 1 to interview day.</p>
+                    </div>
                 </div>
             </section>
 
@@ -230,7 +247,7 @@ const Landing = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                         </div>
                         <h3>AI Interview Simulator</h3>
-                        <p>Simulates company-specific technical challenges matching actual Google, Amazon, and Microsoft hiring standards.</p>
+                        <p>Simulates role-specific technical challenges based on the actual job description you paste — not generic question banks.</p>
                     </div>
 
                     {/* Feature 2: Resume Intelligence */}
@@ -318,24 +335,24 @@ const Landing = () => {
                 </div>
                 <div className="testimonials-grid">
                     <div className="t-card">
-                        <p className="quote">"The skill gap detection alone changed my prep. It pointed out 3 keywords missing in my React profile that Google wanted. I added them, followed the 7-day roadmap, and aced the screen!"</p>
+                        <p className="quote">"The skill gap detection alone changed my prep. It pointed out 3 keywords missing in my profile that the JD specifically asked for. I added them, followed the 7-day roadmap, and aced the screen!"</p>
                         <div className="t-author">
                             <strong>Sarah Jenkins</strong>
-                            <span>Software Engineer at Google</span>
+                            <span>Software Engineer</span>
                         </div>
                     </div>
                     <div className="t-card">
-                        <p className="quote">"I was struggling to tailor my backend profile for different fintech companies. With Interview Copilot, I generated tailored strategies for Stripe and Notion, achieving an immediate lift in response rates."</p>
+                        <p className="quote">"I was struggling to tailor my backend profile for different companies. With Interview Copilot, I generated tailored strategies for every role I applied to and saw an immediate lift in callback rates."</p>
                         <div className="t-author">
                             <strong>Michael Chang</strong>
-                            <span>Backend Engineer at Stripe</span>
+                            <span>Backend Engineer</span>
                         </div>
                     </div>
                     <div className="t-card">
-                        <p className="quote">"Clear, intuitive, and extremely visual. The daily checklists saved me from information overload. I cleared my Meta technical loops by following the behavioral STAR prompts."</p>
+                        <p className="quote">"Clear, intuitive, and extremely visual. The daily checklists saved me from information overload. The behavioral STAR prompts helped me articulate my experience in a way that actually landed."</p>
                         <div className="t-author">
                             <strong>Elena Rostova</strong>
-                            <span>Frontend Architect at Meta</span>
+                            <span>Frontend Engineer</span>
                         </div>
                     </div>
                 </div>
@@ -374,7 +391,7 @@ const Landing = () => {
                     <div className="cta-glow-element" />
                     <h2>Clear the Bar. <br /><span className="text-gradient">Land Your Dream Job Today.</span></h2>
                     <p>
-                        Stop guessing what recruiters want. Synthesize your personalized preparation roadmap, close technical skill gaps, and execute a winning strategy built for the world's most elite engineering teams.
+                        Stop guessing what recruiters want. Synthesize your personalized preparation roadmap, close technical skill gaps, and execute a winning strategy built around the exact role you're targeting.
                     </p>
                     <div className="cta-actions-row">
                         <button className="btn-primary btn-large btn-pulsate" onClick={handleCTA}>
@@ -386,16 +403,6 @@ const Landing = () => {
                         </button>
                     </div>
 
-                    {/* Trust Signals */}
-                    <div className="cta-trust-signals">
-                        <p className="trust-heading">JOIN SOFTWARE ENGINEERS PLACED AT</p>
-                        <div className="trust-logos-row">
-                            <span className="brand-badge">Google</span>
-                            <span className="brand-badge">Stripe</span>
-                            <span className="brand-badge">Meta</span>
-                            <span className="brand-badge">Netflix</span>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -403,8 +410,11 @@ const Landing = () => {
             <footer className="landing-footer">
                 <div className="footer-container">
                     <div className="footer-brand">
-                        <span className="logo-icon">IC</span>
-                        <p>&copy; {new Date().getFullYear()} Interview Copilot. All rights reserved. Built for engineering excellence.</p>
+                        <div className="brand-logo">
+                            <div className="brand-glow-dot" />
+                            <span className="brand-text-main">Interview<span className="brand-text-accent"> Copilot</span></span>
+                        </div>
+                        <p>&copy; {new Date().getFullYear()} Interview Copilot. All rights reserved.</p>
                     </div>
                     <div className="footer-links">
                         <a href="#">Privacy Policy</a>

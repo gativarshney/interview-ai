@@ -181,7 +181,7 @@ const Home = () => {
             <header className='hero-intro-section'>
                 <div className='built-for-maang-badge'>
                     <span className='pulsing-indicator-core' />
-                    <span className='badge-text-content'>✨ Built for Tech Candidates Targeting MAANG</span>
+                    <span className='badge-text-content'>✨ Built for Every Tech Interview</span>
                 </div>
 
                 <h1 className='main-hero-title'>
@@ -190,7 +190,7 @@ const Home = () => {
                 </h1>
 
                 <p className='emotional-subheadline-copy'>
-                    The ultimate intelligent co-pilot for your job search. Plan, predict, and conquer the entire interview funnel with real-time AI strategic roadmaps and interactive simulation.
+                    Paste a job description, upload your resume, and get a full interview strategy in 30 seconds — tailored questions, skill gap analysis, and a day-by-day prep roadmap.
                 </p>
 
                 {/* North Star Metric Card */}
@@ -202,7 +202,7 @@ const Home = () => {
                     <div className='metrics-vertical-separator' />
                     <div className='metric-pill-item'>
                         <span className='metric-number-val'>4.8x</span>
-                        <span className='metric-desc-label'>MAANG Offers Rate</span>
+                        <span className='metric-desc-label'>Interview Offer Rate</span>
                     </div>
                     <div className='metrics-vertical-separator' />
                     <div className='metric-pill-item'>
