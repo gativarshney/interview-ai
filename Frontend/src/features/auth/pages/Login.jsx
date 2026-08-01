@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import '../../auth/auth.scss'
 import useAuth from '../hooks/useAuth'
 
 const Login = () => {
   const navigate = useNavigate()
-  const { loading, handleLogin } = useAuth()
+  const location = useLocation()
+  const { user, sessionLoading, submitting, handleLogin } = useAuth()
 
   const [ email, setEmail ] = useState("")
   const [ password, setPassword ] = useState("")
@@ -14,17 +15,24 @@ const Login = () => {
       e.preventDefault()
       const success = await handleLogin({email,password})
       if(success) {
-        navigate('/dashboard')
+        // Return them to whatever protected page sent them here.
+        navigate(location.state?.from || '/dashboard', { replace: true })
       }
   }
 
-  if(loading){
+  // Wait for the session check before deciding what to render, otherwise an
+  // already-signed-in user sees the login form flash before the redirect.
+  if (sessionLoading) {
     return (
       <div className="spinner-overlay">
         <div className="premium-spinner"></div>
-        <span className="spinner-text">Signing in to Interview Copilot...</span>
+        <span className="spinner-text">Loading...</span>
       </div>
     )
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />
   }
 
   return (
@@ -74,8 +82,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="auth-submit-gradient-btn">
-            Sign In
+          <button type="submit" className="auth-submit-gradient-btn" disabled={submitting}>
+            {submitting ? 'Signing in…' : 'Sign In'}
           </button>
 
           <div className="auth-links-footer">

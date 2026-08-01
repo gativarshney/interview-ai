@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import '../styles/home.scss'
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate } from 'react-router-dom'
@@ -6,8 +6,12 @@ import LoadingScreen from '../components/LoadingScreen.jsx'
 import { useToast } from '../components/Toast.jsx'
 import useAuth from '../../auth/hooks/useAuth.js'
 
+// Must match the multer limit on the server, otherwise a file passes client
+// validation and then fails server-side.
+const MAX_RESUME_BYTES = 3 * 1024 * 1024
+
 const Home = () => {
-    const { loading, generateReport, reports } = useInterview()
+    const { loading, generateReport, reports, getReports } = useInterview()
     const { user, handleLogout } = useAuth()
     const { showToast } = useToast()
     const navigate = useNavigate()
@@ -15,12 +19,17 @@ const Home = () => {
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
     const [ selectedFile, setSelectedFile ] = useState(null)
-    const [ fileUpdatedTime, setFileUpdatedTime ] = useState("")
     const [ validationErrors, setValidationErrors ] = useState({ jobDescription: false, profile: false })
     const [ dragActive, setDragActive ] = useState(false)
     const [ mobileMenuOpen, setMobileMenuOpen ] = useState(false)
     
     const resumeInputRef = useRef()
+
+    // Fetching lives with the page that needs the data. It used to live inside
+    // useInterview, so every component calling the hook re-triggered it.
+    useEffect(() => {
+        getReports()
+    }, [getReports])
 
     // Smooth Scroll Helper
     const handleScrollTo = (e, id) => {
@@ -57,18 +66,23 @@ const Home = () => {
 
     // Handle incoming file (from either standard input or drag-drop)
     const handleFile = (file) => {
-        if (file.type === "application/pdf" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.name.endsWith(".pdf") || file.name.endsWith(".docx")) {
-            if (file.size <= 5 * 1024 * 1024) {
-                setSelectedFile(file)
-                setFileUpdatedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-                setValidationErrors((prev) => ({ ...prev, profile: false }))
-                showToast(`Resume "${file.name}" uploaded successfully.`, 'success')
-            } else {
-                showToast("File size exceeds 5MB limit.", "error")
-            }
-        } else {
-            showToast("Invalid file type. Please upload a PDF or DOCX file.", "warning")
+        // PDF only: the server extracts text with pdf-parse, so a DOCX would be
+        // accepted here and then rejected on upload.
+        const isPdf = file.type === "application/pdf" || /\.pdf$/i.test(file.name)
+
+        if (!isPdf) {
+            showToast("Invalid file type. Please upload a PDF file.", "warning")
+            return
         }
+
+        if (file.size > MAX_RESUME_BYTES) {
+            showToast("File size exceeds the 3MB limit.", "error")
+            return
+        }
+
+        setSelectedFile(file)
+        setValidationErrors((prev) => ({ ...prev, profile: false }))
+        showToast(`Resume "${file.name}" uploaded successfully.`, 'success')
     }
 
     const handleFileChange = (e) => {
@@ -79,7 +93,6 @@ const Home = () => {
 
     const handleRemoveFile = () => {
         setSelectedFile(null)
-        setFileUpdatedTime("")
         if (resumeInputRef.current) {
             resumeInputRef.current.value = ""
         }
@@ -328,14 +341,14 @@ const Home = () => {
                                             </svg>
                                         </span>
                                         <p className='dropzone-primary-headline'>Drag &amp; drop resume or click to upload</p>
-                                        <p className='dropzone-secondary-subline'>PDF or DOCX format (Max 5MB)</p>
+                                        <p className='dropzone-secondary-subline'>PDF format (Max 3MB)</p>
                                         <input
                                             ref={resumeInputRef}
                                             hidden
                                             type='file'
                                             id='resume'
                                             name='resume'
-                                            accept='.pdf,.docx'
+                                            accept='application/pdf,.pdf'
                                             onChange={handleFileChange}
                                         />
                                     </label>

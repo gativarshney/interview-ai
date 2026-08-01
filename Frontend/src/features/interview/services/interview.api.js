@@ -13,14 +13,19 @@ export const generateInterviewReport = async ({ jobDescription, selfDescription,
 
     const formData = new FormData()
     formData.append("jobDescription", jobDescription)
-    formData.append("selfDescription", selfDescription)
-    formData.append("resume", resumeFile)
 
-    const response = await api.post("/api/interview/", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    })
+    if (selfDescription) {
+        formData.append("selfDescription", selfDescription)
+    }
+
+    // Only append when a file was actually chosen — appending a null value
+    // sends the literal string "null" as the field.
+    if (resumeFile) {
+        formData.append("resume", resumeFile)
+    }
+
+    // Let the browser set Content-Type so the multipart boundary is included.
+    const response = await api.post("/api/interview/", formData)
 
     return response.data
 

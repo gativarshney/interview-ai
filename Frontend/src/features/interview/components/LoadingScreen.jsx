@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react'
 
+// Module scope so the array identity is stable across renders.
+const STEPS = [
+    "Reading your resume and profile...",
+    "Parsing the target job description...",
+    "Comparing your profile against the role...",
+    "Identifying skill gaps...",
+    "Drafting technical questions...",
+    "Drafting behavioral questions...",
+    "Building your day-by-day prep plan...",
+    "Finalizing your report..."
+]
+
 const LoadingScreen = () => {
     const [step, setStep] = useState(0)
-    const steps = [
-        "Initializing AI strategy engine...",
-        "Analyzing resume & profile structure...",
-        "Scanning target job description requirements...",
-        "Extracting core technical skill gaps...",
-        "Formulating 7-day personalized prep roadmap...",
-        "Synthesizing high-impact behavioral questions...",
-        "Assembling tailored coding & system design challenges...",
-        "Finalizing your premium strategy report..."
-    ]
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev))
+            setStep((prev) => (prev < STEPS.length - 1 ? prev + 1 : prev))
         }, 3200)
         return () => clearInterval(interval)
     }, [])
@@ -38,12 +40,12 @@ const LoadingScreen = () => {
                 <p className="loader-subtitle">Please wait while the AI generates your strategy</p>
 
                 <div className="progress-bar-container">
-                    <div className="progress-bar-fill" style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
+                    <div className="progress-bar-fill" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
                 </div>
 
                 <div className="steps-tracker">
                     <div className="active-step-indicator" />
-                    <span className="current-step-text">{steps[step]}</span>
+                    <span className="current-step-text">{STEPS[step]}</span>
                 </div>
 
                 <div className="loader-tips">

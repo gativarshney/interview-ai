@@ -5,50 +5,24 @@ const api = axios.create({
     withCredentials: true
 })
 
-export async function register ({username, email, password}){
-    try{
-        const response = await api.post('/register', {
-            username, email, password
-        });
-        return response.data;
-    }
-    catch(error){
-        console.error('Registration failed:', error)
-        throw error
-    }
+export async function register({ username, email, password }) {
+    const response = await api.post('/register', { username, email, password })
+    return response.data
 }
 
-export async function login ({email, password}){
-    try{
-        const response = await api.post('/login', {
-            email, password
-        });
-        return response.data;
-    }
-    catch(error){
-        console.error('Login failed:', error)
-        throw error
-    }
+export async function login({ email, password }) {
+    const response = await api.post('/login', { email, password })
+    return response.data
 }
 
-export async function logout (){
-    try{
-        const response = await api.get('/logout');
-        return response.data;
-    }
-    catch(error){
-        console.error('Logout failed:', error)
-        throw error
-    }
+export async function logout() {
+    const response = await api.get('/logout')
+    return response.data
 }
 
-export async function getMe (){
-    try{
-        const response = await api.get('/get-me');
-        return response.data;
-    }
-    catch(error){
-        console.error('Get current user failed:', error)
-        throw error
-    }
+export async function getMe() {
+    // Callers decide what a failure means. A 401 here is the expected result for
+    // a signed-out visitor, so this deliberately does not log an error.
+    const response = await api.get('/get-me')
+    return response.data
 }

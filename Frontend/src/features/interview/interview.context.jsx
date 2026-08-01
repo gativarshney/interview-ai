@@ -7,17 +7,17 @@ export const InterviewProvider = ({ children }) => {
     const [loading, setLoading] = useState(false)
     const [report, setReport] = useState(null)
     const [reports, setReports] = useState([])
-    const [pdfGenerating, setPdfGenerating] = useState(false)
-    const [pdfStep, setPdfStep] = useState(0) // 0: Idle, 1-5: Progressive steps, 6: Success
+    // 'idle' | 'generating' | 'success' | 'error'. Replaces the old numeric step
+    // counter, which advanced on a timer rather than on real progress.
+    const [pdfStatus, setPdfStatus] = useState('idle')
     const [pdfError, setPdfError] = useState(null)
 
     return (
-        <InterviewContext.Provider value={{ 
-            loading, setLoading, 
-            report, setReport, 
+        <InterviewContext.Provider value={{
+            loading, setLoading,
+            report, setReport,
             reports, setReports,
-            pdfGenerating, setPdfGenerating,
-            pdfStep, setPdfStep,
+            pdfStatus, setPdfStatus,
             pdfError, setPdfError
         }}>
             {children}

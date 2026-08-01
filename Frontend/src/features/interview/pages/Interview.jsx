@@ -214,10 +214,12 @@ const Interview = () => {
         const queryNav = new URLSearchParams(window.location.search).get('nav')
         return ['technical', 'behavioral', 'roadmap', 'insights'].includes(queryNav) ? queryNav : 'technical'
     })
-    const { report, loading, getResumePdf, pdfGenerating } = useInterview()
+    const { report, loading, getResumePdf, pdfGenerating, getReportById } = useInterview()
     const { interviewId } = useParams()
 
-
+    useEffect(() => {
+        if (interviewId) getReportById(interviewId)
+    }, [interviewId, getReportById])
 
     if (loading || !report) {
         return <LoadingScreen />
@@ -226,6 +228,13 @@ const Interview = () => {
     const scoreColor =
         report.matchScore >= 80 ? 'score--high' :
             report.matchScore >= 60 ? 'score--mid' : 'score--low'
+
+    // Previously hardcoded to "Strong match for this role", which was shown
+    // even under a 20% score.
+    const scoreSummary =
+        report.matchScore >= 80 ? 'Strong match for this role' :
+            report.matchScore >= 60 ? 'Decent match — close the gaps below' :
+                'Weak match — significant gaps to address'
 
 
     return (
@@ -344,7 +353,7 @@ const Interview = () => {
                             <span className='match-score__value'>{report.matchScore}</span>
                             <span className='match-score__pct'>%</span>
                         </div>
-                        <p className='match-score__sub'>Strong match for this role</p>
+                        <p className='match-score__sub'>{scoreSummary}</p>
                     </div>
 
                     <div className='sidebar-divider' />
@@ -403,20 +412,18 @@ const Interview = () => {
 
                 {/* Mobile Active Panel Content Pane */}
                 <main className='mobile-interview-content'>
-                    {(activeNav === 'technical' || activeNav === 'insights') && ( // Default fallback to technical
-                        activeNav === 'technical' && (
-                            <section>
-                                <div className='content-header'>
-                                    <h2>Technical Questions</h2>
-                                    <span className='content-header__count'>{report.technicalQuestions.length} questions</span>
-                                </div>
-                                <div className='q-list'>
-                                    {report.technicalQuestions.map((q, i) => (
-                                        <QuestionCard key={i} item={q} index={i} jobDescription={report.jobDescription} />
-                                    ))}
-                                </div>
-                            </section>
-                        )
+                    {activeNav === 'technical' && (
+                        <section>
+                            <div className='content-header'>
+                                <h2>Technical Questions</h2>
+                                <span className='content-header__count'>{report.technicalQuestions.length} questions</span>
+                            </div>
+                            <div className='q-list'>
+                                {report.technicalQuestions.map((q, i) => (
+                                    <QuestionCard key={i} item={q} index={i} jobDescription={report.jobDescription} />
+                                ))}
+                            </div>
+                        </section>
                     )}
 
                     {activeNav === 'behavioral' && (

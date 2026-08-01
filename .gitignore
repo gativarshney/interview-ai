@@ -1,0 +1,15 @@
+# Local tooling / editor state — never commit
+.claude/
+.vscode/
+.idea/
+.DS_Store
+
+# Environment files (per-app .gitignore files also cover these)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Dependencies & build output
+node_modules/
+dist/

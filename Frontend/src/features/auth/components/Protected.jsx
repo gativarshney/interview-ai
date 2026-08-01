@@ -1,11 +1,12 @@
 import useAuth from "../hooks/useAuth"
 import React from "react"
-import { Navigate } from "react-router-dom"
+import { Navigate, useLocation } from "react-router-dom"
 
 const Protected = ({ children }) => {
-    const { user, loading } = useAuth()
+    const { user, sessionLoading } = useAuth()
+    const location = useLocation()
 
-    if(loading){
+    if (sessionLoading) {
         return (
             <div className="spinner-overlay">
                 <div className="premium-spinner"></div>
@@ -14,8 +15,9 @@ const Protected = ({ children }) => {
         )
     }
 
-    if(!user){
-        return <Navigate to="/login" replace />
+    if (!user) {
+        // Remember where they were headed so login can return them there.
+        return <Navigate to="/login" replace state={{ from: location.pathname }} />
     }
 
     return children

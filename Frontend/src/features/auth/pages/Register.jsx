@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import '../../auth/auth.scss'
 import useAuth from '../hooks/useAuth'
 
 const Register = () => {
   const navigate = useNavigate()
-  const { loading, handleRegister } = useAuth()
+  const { user, sessionLoading, submitting, handleRegister } = useAuth()
   const [formData, setFormData] = useState({ username: '', email: '', password: '' })
 
   const handleChange = (event) => {
@@ -21,13 +21,17 @@ const Register = () => {
     }
   }
 
-  if (loading) {
+  if (sessionLoading) {
     return (
       <div className="spinner-overlay">
         <div className="premium-spinner"></div>
-        <span className="spinner-text">Creating your Interview Copilot account...</span>
+        <span className="spinner-text">Loading...</span>
       </div>
     )
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />
   }
 
   return (
@@ -85,14 +89,15 @@ const Register = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••••••••"
+              placeholder="At least 8 characters, with a number"
               autoComplete="new-password"
+              minLength={8}
               required
             />
           </div>
 
-          <button type="submit" className="auth-submit-gradient-btn">
-            Create Account
+          <button type="submit" className="auth-submit-gradient-btn" disabled={submitting}>
+            {submitting ? 'Creating account…' : 'Create Account'}
           </button>
 
           <div className="auth-links-footer">
