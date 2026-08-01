@@ -8,20 +8,27 @@ async function authUser(req, res, next) {
       message: "Token not provided",
     });
   }
-  const isBlackListed = await tokenBlackListModel.findOne({ token });
-  if (isBlackListed) {
-    return res.status(401).json({
-      message: "Token is invalid",
-    });
-  }
+
   try {
+    // Verify the signature first: an invalid token is not worth a DB round trip.
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const isBlackListed = await tokenBlackListModel.exists({ token });
+    if (isBlackListed) {
+      return res.status(401).json({
+        message: "Token is invalid",
+      });
+    }
+
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({
-      message: "Invalid Token",
-    });
+    if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
+      return res.status(401).json({
+        message: "Invalid Token",
+      });
+    }
+    return next(error);
   }
 }
 

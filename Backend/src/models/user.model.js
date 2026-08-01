@@ -1,21 +1,34 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    unique: [true, "username already taken"],
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      required: [true, "Username is required"],
+      unique: true,
+      trim: true,
+      minlength: [3, "Username must be at least 3 characters"],
+      maxlength: [32, "Username must be at most 32 characters"],
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      // Never returned by default; queries that need it must opt in with
+      // .select("+password") so an accidental find() cannot leak the hash.
+      select: false,
+    },
   },
-  email: {
-    type: String,
-    unique: [true, "Account already exist with this email address"],
-    required: true,
+  {
+    timestamps: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+);
 
 const userModel = mongoose.model("users", userSchema);
 
