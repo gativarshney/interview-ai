@@ -2,6 +2,7 @@ require("dotenv").config()
 
 const app = require("./src/app")
 const connectToDB = require("./src/config/database")
+const { closeBrowser } = require("./src/services/pdf.service")
 
 const REQUIRED_ENV = ["MONGO_URI", "JWT_SECRET", "GOOGLE_GENAI_API_KEY"]
 
@@ -28,7 +29,11 @@ async function startServer() {
 
     const shutdown = (signal) => {
         console.log(`${signal} received, shutting down...`)
-        server.close(() => process.exit(0))
+        server.close(async () => {
+            // Chromium is a child process; without this it can outlive the API.
+            await closeBrowser()
+            process.exit(0)
+        })
         setTimeout(() => process.exit(1), 10000).unref()
     }
 

@@ -1,5 +1,6 @@
 const pdfParse = require("pdf-parse")
-const { generateInterviewReport, evaluatePracticeAnswer, generateResumeHtml, generatePdfFromHtml } = require("../services/ai.service")
+const { generateInterviewReport, evaluatePracticeAnswer, generateResumeHtml } = require("../services/ai.service")
+const { generatePdfFromHtml } = require("../services/pdf.service")
 const interviewReportModel = require("../models/interviewReport.model")
 const { HttpError } = require("../middlewares/error.middleware")
 
