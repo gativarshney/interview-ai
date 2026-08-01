@@ -35,7 +35,9 @@ export const useInterview = () => {
     }
 
     const {
-        loading, setLoading,
+        generating, setGenerating,
+        reportLoading, setReportLoading,
+        listLoading, setListLoading,
         report, setReport,
         reports, setReports,
         pdfStatus, setPdfStatus,
@@ -43,7 +45,7 @@ export const useInterview = () => {
     } = context
 
     const generateReport = useCallback(async ({ jobDescription, selfDescription, resumeFile }) => {
-        setLoading(true)
+        setGenerating(true)
         try {
             const response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
             if (response?.interviewReport) {
@@ -57,12 +59,12 @@ export const useInterview = () => {
             showToast(msg, 'error')
             return null
         } finally {
-            setLoading(false)
+            setGenerating(false)
         }
-    }, [setLoading, setReport, showToast])
+    }, [setGenerating, setReport, showToast])
 
     const getReportById = useCallback(async (interviewId) => {
-        setLoading(true)
+        setReportLoading(true)
         try {
             const response = await getInterviewReportById(interviewId)
             if (response?.interviewReport) {
@@ -78,12 +80,12 @@ export const useInterview = () => {
             showToast(msg, 'error')
             return null
         } finally {
-            setLoading(false)
+            setReportLoading(false)
         }
-    }, [setLoading, setReport, showToast])
+    }, [setReportLoading, setReport, showToast])
 
     const getReports = useCallback(async () => {
-        setLoading(true)
+        setListLoading(true)
         try {
             const response = await getAllInterviewReports()
             const list = response?.interviewReports ?? []
@@ -93,9 +95,9 @@ export const useInterview = () => {
             showToast('Failed to load recent plans.', 'error')
             return []
         } finally {
-            setLoading(false)
+            setListLoading(false)
         }
-    }, [setLoading, setReports, showToast])
+    }, [setListLoading, setReports, showToast])
 
     const getResumePdf = useCallback(async (interviewReportId) => {
         setPdfError(null)
@@ -157,7 +159,8 @@ export const useInterview = () => {
     }, [showToast])
 
     return {
-        loading, report, reports,
+        generating, reportLoading, listLoading,
+        report, reports,
         pdfStatus, pdfError, pdfGenerating: pdfStatus !== 'idle',
         generateReport, getReportById, getReports, getResumePdf, evaluateAnswer
     }

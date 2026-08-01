@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import '../styles/interview.scss'
 import { useInterview } from '../hooks/useInterview.js'
 import { useParams, useNavigate } from 'react-router-dom'
-import LoadingScreen from '../components/LoadingScreen.jsx'
+import ReportSkeleton from '../components/ReportSkeleton.jsx'
 import ResumePdfModal from '../components/ResumePdfModal.jsx'
 
 
@@ -113,7 +113,7 @@ const QuestionCard = ({ item, index, jobDescription }) => {
                                         {evaluating ? (
                                             <>
                                                 <span className="q-practice__spinner" />
-                                                Synthesizing AI Evaluation...
+                                                Reviewing your answer...
                                             </>
                                         ) : (
                                             <>
@@ -214,15 +214,17 @@ const Interview = () => {
         const queryNav = new URLSearchParams(window.location.search).get('nav')
         return ['technical', 'behavioral', 'roadmap', 'insights'].includes(queryNav) ? queryNav : 'technical'
     })
-    const { report, loading, getResumePdf, pdfGenerating, getReportById } = useInterview()
+    const { report, reportLoading, getResumePdf, pdfGenerating, getReportById } = useInterview()
     const { interviewId } = useParams()
 
     useEffect(() => {
         if (interviewId) getReportById(interviewId)
     }, [interviewId, getReportById])
 
-    if (loading || !report) {
-        return <LoadingScreen />
+    // Fetching an existing report is a fast GET, so it gets a skeleton in the
+    // shape of the page rather than the generation view.
+    if (reportLoading || !report) {
+        return <ReportSkeleton />
     }
 
     const scoreColor =

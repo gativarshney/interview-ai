@@ -228,7 +228,7 @@ const Landing = () => {
                     <div className="diff-card">
                         <span className="diff-icon">🗓️</span>
                         <h4>A 7-day plan, not just advice</h4>
-                        <p>You get a day-by-day structured prep blueprint — not a list of tips. Actionable tasks from Day 1 to interview day.</p>
+                        <p>A dated checklist with a focus area and concrete tasks for each day — not a list of tips.</p>
                     </div>
                 </div>
             </section>
@@ -360,7 +360,7 @@ const Landing = () => {
                     <div className="cta-glow-element" />
                     <h2>Clear the Bar. <br /><span className="text-gradient">Land Your Dream Job Today.</span></h2>
                     <p>
-                        Stop guessing what recruiters want. Synthesize your personalized preparation roadmap, close technical skill gaps, and execute a winning strategy built around the exact role you're targeting.
+                        Paste a job description, upload your resume, and get a prep plan built around the gaps that actually matter for that role.
                     </p>
                     <div className="cta-actions-row">
                         <button className="btn-primary btn-large btn-pulsate" onClick={handleCTA}>

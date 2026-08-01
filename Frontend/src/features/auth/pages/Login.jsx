@@ -49,7 +49,7 @@ const Login = () => {
           </div>
           <h1>Welcome back</h1>
           <p className="auth-card-subtitle">
-            Sign in to access your custom strategies and simulation blueprints.
+            Sign in to pick up your interview plans where you left off.
           </p>
         </div>
 

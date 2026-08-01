@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import '../styles/home.scss'
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate } from 'react-router-dom'
-import LoadingScreen from '../components/LoadingScreen.jsx'
+import GeneratingState from '../components/GeneratingState.jsx'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useToast } from '../components/Toast.jsx'
 import useAuth from '../../auth/hooks/useAuth.js'
 
@@ -11,7 +12,7 @@ import useAuth from '../../auth/hooks/useAuth.js'
 const MAX_RESUME_BYTES = 3 * 1024 * 1024
 
 const Home = () => {
-    const { loading, generateReport, reports, getReports } = useInterview()
+    const { generating, listLoading, generateReport, reports, getReports } = useInterview()
     const { user, handleLogout } = useAuth()
     const { showToast } = useToast()
     const navigate = useNavigate()
@@ -40,7 +41,7 @@ const Home = () => {
         }
     }
 
-    // Active Synthesis Trigger from Floating Navbar
+    // Generate directly from the sticky navbar button
     const handleNavbarGenerateReport = (e) => {
         e.preventDefault()
         const hasJobDesc = jobDescription && jobDescription.trim() !== ""
@@ -60,7 +61,7 @@ const Home = () => {
                 profile: !hasProfile
             }
             setValidationErrors(errors)
-            showToast('Please provide a target job description and either a resume or self-description in the workspace.', 'warning')
+            showToast('Add a job description, plus either a resume or a short description of your background.', 'warning')
         }
     }
 
@@ -127,7 +128,7 @@ const Home = () => {
         try {
             const data = await generateReport({ jobDescription, selfDescription, resumeFile })
             if (data && data._id) {
-                showToast('Interview strategy blueprint synthesized successfully!', 'success')
+                showToast('Your interview plan is ready.', 'success')
                 navigate(`/interview/${data._id}`)
             } else {
                 console.error('Report generation did not return an id', data)
@@ -139,8 +140,10 @@ const Home = () => {
         }
     }
 
-    if (loading) {
-        return <LoadingScreen />
+    // Only a real generation takes over the page. Loading the plans list no
+    // longer blocks anything — that list renders its own skeleton below.
+    if (generating) {
+        return <GeneratingState />
     }
 
     return (
@@ -387,13 +390,13 @@ const Home = () => {
                                     <line x1="12" y1="16" x2="12" y2="12" />
                                     <line x1="12" y1="8" x2="12.01" y2="8" />
                                 </svg>
-                                <span>Either a <strong>Resume</strong> or <strong>Self Description</strong> is required to generate custom blueprints.</span>
+                                <span>Add either a <strong>resume</strong> or a <strong>short description</strong> of your background.</span>
                             </div>
                         </div>
 
                         {/* macOS Window Form Actions Footer */}
                         <div className='macos-footer-form-actions'>
-                            <span className='macos-eta-badge'>⚡ AI blueprint synthesis &bull; ~30s</span>
+                            <span className='macos-eta-badge'>Takes about 30 seconds</span>
                             <button
                                 type="button"
                                 onClick={handleGenerateReport}
@@ -402,7 +405,7 @@ const Home = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ marginRight: '6px' }}>
                                     <polygon points="12 2 2 22 12 17 22 22 12 2" />
                                 </svg>
-                                Generate My Interview Strategy
+                                Generate My Interview Plan
                             </button>
                         </div>
                     </div>
@@ -413,10 +416,22 @@ const Home = () => {
             <section className='recent-plans-history-section' id='plans'>
                 <div className='plans-history-header-block'>
                     <h2 className='plans-history-title'>My Recent Interview Plans</h2>
-                    <p className='plans-history-subtitle'>Review and track your previously synthesized custom strategy blueprints.</p>
+                    <p className='plans-history-subtitle'>Every plan you have generated, newest first.</p>
                 </div>
 
-                {reports.length > 0 ? (
+                {listLoading && reports.length === 0 ? (
+                    <div className='glass-plans-cards-grid'>
+                        {[0, 1, 2].map((i) => (
+                            <div key={i} className='glass-plan-card-item'>
+                                <div className='card-inner-details'>
+                                    <Skeleton className='h-5 w-3/5' />
+                                    <Skeleton className='mt-3 h-3 w-2/5' />
+                                    <Skeleton className='mt-5 h-6 w-32 rounded-full' />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : reports.length > 0 ? (
                     <div className='glass-plans-cards-grid'>
                         {reports.map(report => (
                             <div 
@@ -450,7 +465,7 @@ const Home = () => {
                             </svg>
                         </div>
                         <h3>No interview strategies yet</h3>
-                        <p>Complete the workspace form details above to synthesize your very first high-impact AI strategy report.</p>
+                        <p>Fill in the form above to generate your first interview plan.</p>
                     </div>
                 )}
             </section>
