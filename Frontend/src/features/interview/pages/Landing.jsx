@@ -5,20 +5,20 @@ import '../styles/landing.scss'
 
 const FAQ_ITEMS = [
     {
-        q: "How does the AI analyze my resume and matching score?",
-        a: "Our system parses the text of your uploaded resume PDF and runs dynamic cross-matching diagnostics against the job description using advanced Gemini LLM endpoints. It grades your profile against key skills, core concepts, and terminology, delivering a highly precise ATS scoring index."
+        q: "How is the match score calculated?",
+        a: "Your resume PDF is parsed to text and sent, along with the job description, to Google's Gemini model. It compares the skills, technologies and experience in your profile against what the role asks for and returns a 0–100 score. It is a model's judgement of fit, not a guarantee of how any specific company's screening software will rate you."
     },
     {
-        q: "What does the 7-day personalized road map contain?",
-        a: "It breaks down your target alignment gaps into daily preparation tasks. Day 1-3 focus on severe technical and system design theory alignment, Day 4-5 detail targeted behavioral responses (STAR format), and Day 6-7 provide high-fidelity coding and structural simulation challenges tailored to the role."
+        q: "What is in the preparation plan?",
+        a: "A day-by-day breakdown generated from the gaps found between your profile and the target role — each day has a focus area and a short list of concrete tasks. Alongside it you get technical and behavioural questions, each with the reason an interviewer would ask it and notes on how to answer."
     },
     {
-        q: "Is my resume data safe and private?",
-        a: "Absolutely. We secure your uploaded assets with enterprise-grade encryption. The parsed contents are only processed inside sandboxed context boundaries to compile your interview report and are never utilized to train public foundational AI models."
+        q: "What happens to my resume data?",
+        a: "Be aware of what this involves: your resume is parsed to text, stored in our database, and sent to Google's Gemini API to generate your report. It is not sold or shared with anyone else, and Google states that data sent through the paid Gemini API is not used to train their models. This is a personal project, not an audited service — please do not upload anything you would not be comfortable sharing."
     },
     {
-        q: "Can I generate a resume tailored for a specific role and company?",
-        a: "Yes. Our AI generator extracts matching and missing keywords from the job description and generates a fully ATS-optimized PDF resume customized for that specific role — whether it's a startup, mid-size company, or large enterprise."
+        q: "Can I generate a resume tailored to a specific role?",
+        a: "Yes. It rewrites and reorders your existing experience to emphasise what the job description asks for, then renders it to a clean single-column PDF that parses correctly in applicant tracking systems. It will not invent employers, dates or achievements that are not already in your resume — if something is missing, it is left out rather than made up."
     }
 ]
 
@@ -136,10 +136,10 @@ const Landing = () => {
             {/* 1. Hero Section */}
             <section className="hero-section">
                 <div className="hero-container">
-                    <span className="badge-promo">Next-Gen AI Interview Copilot</span>
-                    <h1>Outprepare the Competition. <br /><span className="text-gradient">Land the Role.</span></h1>
+                    <span className="badge-promo">Built for technical interviews</span>
+                    <h1>Stop prepping in the dark. <br /><span className="text-gradient">Prep for the actual job.</span></h1>
                     <p className="hero-subtitle">
-                        Audit your resume against real-world job descriptions, target high-severity skill gaps, and unlock a customized preparation blueprint built for your exact role and company.
+                        Paste the job description, upload your resume, and get back the questions you are likely to face, the gaps in your profile that matter, and a day-by-day plan to close them.
                     </p>
                     <div className="hero-ctas">
                         <button className="btn-primary btn-large" onClick={handleCTA}>
@@ -162,29 +162,29 @@ const Landing = () => {
                         <div className="mockup-content">
                             <div className="mockup-sidebar">
                                 <div className="mockup-logo">IC</div>
-                                <div className="mockup-menu-item active">Dashboard</div>
-                                <div className="mockup-menu-item">Strategies</div>
-                                <div className="mockup-menu-item">Resume Intelligence</div>
-                                <div className="mockup-menu-item">ATS Audit</div>
+                                <div className="mockup-menu-item active">My Plans</div>
+                                <div className="mockup-menu-item">Questions</div>
+                                <div className="mockup-menu-item">Prep Roadmap</div>
+                                <div className="mockup-menu-item">Tailored Resume</div>
                             </div>
                             <div className="mockup-main">
                                 <div className="mockup-widgets">
                                     <div className="widget-box">
-                                        <p className="w-lbl">Interviews Cleared</p>
-                                        <p className="w-val">12</p>
+                                        <p className="w-lbl">Plans Generated</p>
+                                        <p className="w-val">3</p>
                                     </div>
                                     <div className="widget-box">
-                                        <p className="w-lbl">Resume status</p>
-                                        <p className="w-val" style={{ color: '#0c9c8a', fontSize: '0.85rem' }}>✓ Active.pdf</p>
+                                        <p className="w-lbl">Resume</p>
+                                        <p className="w-val" style={{ color: '#0c9c8a', fontSize: '0.85rem' }}>resume.pdf</p>
                                     </div>
                                     <div className="widget-box">
-                                        <p className="w-lbl">Latest ATS Score</p>
-                                        <p className="w-val" style={{ color: '#ff2d78' }}>94%</p>
+                                        <p className="w-lbl">Match Score</p>
+                                        <p className="w-val" style={{ color: '#ff2d78' }}>72%</p>
                                     </div>
                                 </div>
                                 <div className="mockup-chart-row">
                                     <div className="chart-card">
-                                        <h4>Preparation Roadmap Progression</h4>
+                                        <h4>Preparation Roadmap</h4>
                                         <div className="roadmap-bar-row">
                                             <span>Day 1: System Design</span><div className="bar"><div className="fill" style={{ width: '100%' }}></div></div>
                                         </div>
@@ -236,8 +236,8 @@ const Landing = () => {
             {/* 3. Features Grid */}
             <section id="features" className="section-padding features-section">
                 <div className="section-header">
-                    <h2>Platform Capabilities</h2>
-                    <p>Every feature you need to dissect job expectations and stand out to top recruiters.</p>
+                    <h2>What It Does</h2>
+                    <p>Five things, built around one input: your resume and the job you are applying for.</p>
                 </div>
                 <div className="features-grid">
                     
@@ -246,8 +246,8 @@ const Landing = () => {
                         <div className="feature-icon feature-icon--1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                         </div>
-                        <h3>AI Interview Simulator</h3>
-                        <p>Simulates role-specific technical challenges based on the actual job description you paste — not generic question banks.</p>
+                        <h3>Role-Specific Questions</h3>
+                        <p>Technical and behavioural questions generated from the job description you paste, each with the interviewer's intent and notes on how to answer.</p>
                     </div>
 
                     {/* Feature 2: Resume Intelligence */}
@@ -255,8 +255,8 @@ const Landing = () => {
                         <div className="feature-icon feature-icon--2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
                         </div>
-                        <h3>Resume Intelligence</h3>
-                        <p>Extracts structure, keywords, and qualifications from your profile to check technical matching ratios instantly.</p>
+                        <h3>Practice Arena</h3>
+                        <p>Write your own answer to any question and get it graded against the STAR method, with specific gaps and a suggested rewrite.</p>
                     </div>
 
                     {/* Feature 3: ATS Optimization */}
@@ -264,8 +264,8 @@ const Landing = () => {
                         <div className="feature-icon feature-icon--3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
                         </div>
-                        <h3>ATS Keyphrase Audit</h3>
-                        <p>Checks your profile against applicant tracking parameters, providing actionable scoring diagnostics to pass resume filters.</p>
+                        <h3>Match Score</h3>
+                        <p>A 0–100 read on how closely your profile lines up with the role, so you know where you stand before you apply.</p>
                     </div>
 
                     {/* Feature 4: Skill Gaps */}
@@ -274,7 +274,7 @@ const Landing = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 22 22 22"></polygon><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                         </div>
                         <h3>Skill Gap Detection</h3>
-                        <p>Identifies exact technologies or conceptual gaps missing from your resume that are explicitly demanded by the recruiter.</p>
+                        <p>The specific technologies and concepts the job asks for that your resume does not mention, ranked low / medium / high.</p>
                     </div>
 
                     {/* Feature 5: Personalized Roadmaps */}
@@ -282,8 +282,8 @@ const Landing = () => {
                         <div className="feature-icon feature-icon--1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
                         </div>
-                        <h3>Dynamic Prep Blueprints</h3>
-                        <p>Formulates a day-by-day structured checklist targeted at closing technical and behavioral gaps in under 7 days.</p>
+                        <h3>Day-by-Day Prep Plan</h3>
+                        <p>A dated checklist built around your actual gaps — a focus area and concrete tasks for each day, not a list of tips.</p>
                     </div>
 
                     {/* Feature 6: Dashboard Analytics */}
@@ -291,8 +291,8 @@ const Landing = () => {
                         <div className="feature-icon feature-icon--2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                         </div>
-                        <h3>Comprehensive Dashboard</h3>
-                        <p>A unified interface tracking all completed plans, resume readiness, matching statistics, and recommended quick triggers.</p>
+                        <h3>Tailored Resume PDF</h3>
+                        <p>Your real experience rewritten to emphasise what the role asks for, rendered to a clean single-column PDF that parses in ATS software.</p>
                     </div>
                 </div>
             </section>
@@ -301,7 +301,7 @@ const Landing = () => {
             <section id="how-it-works" className="section-padding how-it-works-section">
                 <div className="section-header">
                     <h2>How It Works</h2>
-                    <p>Four streamlined steps from connecting your profile to clearing the final onboarding round.</p>
+                    <p>Four steps, about thirty seconds.</p>
                 </div>
                 <div className="works-timeline">
                     <div className="timeline-node">
@@ -311,58 +311,27 @@ const Landing = () => {
                     </div>
                     <div className="timeline-node">
                         <div className="node-num">2</div>
-                        <h4>AI Audits Gaps</h4>
-                        <p>Our AI processes key technologies, structures, and identifies critical ATS keyword alignments.</p>
+                        <h4>It Finds the Gaps</h4>
+                        <p>Your experience is compared against what the role actually asks for, and the differences are ranked by how much they matter.</p>
                     </div>
                     <div className="timeline-node">
                         <div className="node-num">3</div>
-                        <h4>Synthesize Blueprint</h4>
-                        <p>Get technical questions, STAR behavioral frameworks, and a day-by-day study roadmap.</p>
+                        <h4>You Get a Plan</h4>
+                        <p>Technical and behavioural questions with model answers, plus a day-by-day checklist built around your gaps.</p>
                     </div>
                     <div className="timeline-node">
                         <div className="node-num">4</div>
-                        <h4>Practice &amp; Excel</h4>
-                        <p>Resolve severities, optimize custom PDF resumes, and clear your recruiter screens with confidence.</p>
+                        <h4>Practice and Apply</h4>
+                        <p>Rehearse your answers and get them graded, then download a version of your resume tailored to the role.</p>
                     </div>
                 </div>
             </section>
 
-            {/* 5. Testimonials */}
-            <section className="section-padding testimonials-section">
-                <div className="section-header">
-                    <h2>Success Stories</h2>
-                    <p>Hear from software engineers who used our strategy blueprints to secure offers at leading tech companies.</p>
-                </div>
-                <div className="testimonials-grid">
-                    <div className="t-card">
-                        <p className="quote">"The skill gap detection alone changed my prep. It pointed out 3 keywords missing in my profile that the JD specifically asked for. I added them, followed the 7-day roadmap, and aced the screen!"</p>
-                        <div className="t-author">
-                            <strong>Sarah Jenkins</strong>
-                            <span>Software Engineer</span>
-                        </div>
-                    </div>
-                    <div className="t-card">
-                        <p className="quote">"I was struggling to tailor my backend profile for different companies. With Interview Copilot, I generated tailored strategies for every role I applied to and saw an immediate lift in callback rates."</p>
-                        <div className="t-author">
-                            <strong>Michael Chang</strong>
-                            <span>Backend Engineer</span>
-                        </div>
-                    </div>
-                    <div className="t-card">
-                        <p className="quote">"Clear, intuitive, and extremely visual. The daily checklists saved me from information overload. The behavioral STAR prompts helped me articulate my experience in a way that actually landed."</p>
-                        <div className="t-author">
-                            <strong>Elena Rostova</strong>
-                            <span>Frontend Engineer</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* 6. FAQ Section */}
+            {/* 5. FAQ Section */}
             <section id="faq" className="section-padding faq-section">
                 <div className="section-header">
                     <h2>Frequently Asked Questions</h2>
-                    <p>Find quick answers to common queries about our AI strategizer platform.</p>
+                    <p>How it works under the hood, and what happens to your data.</p>
                 </div>
                 <div className="faq-accordion">
                     {FAQ_ITEMS.map((item, idx) => (
@@ -417,10 +386,8 @@ const Landing = () => {
                         <p>&copy; {new Date().getFullYear()} Interview Copilot. All rights reserved.</p>
                     </div>
                     <div className="footer-links">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                        <a href="#">Security</a>
-                        <a href="#">Contact Support</a>
+                        <a href="https://github.com/gativarshney/interview-ai" target="_blank" rel="noopener noreferrer">Source on GitHub</a>
+                        <button type="button" onClick={() => scrollSection('faq')}>How it handles your data</button>
                     </div>
                 </div>
             </footer>

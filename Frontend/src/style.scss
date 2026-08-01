@@ -1,7 +1,9 @@
 @use './style/buttons' as *;
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-@import './features/interview/styles/dashboard';
-@import './features/interview/styles/landing';
+
+// Page-level stylesheets are imported by the pages that use them (see
+// Landing.jsx, Home.jsx, Interview.jsx). Importing landing.scss here as well
+// shipped the whole file twice in the CSS bundle.
 
 :root {
   color-scheme: dark;

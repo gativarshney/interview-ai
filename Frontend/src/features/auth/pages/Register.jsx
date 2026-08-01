@@ -105,9 +105,9 @@ const Register = () => {
               Already have an account? <span className="highlight-text">Sign In</span>
             </Link>
             <span className="auth-links-separator">&bull;</span>
-            <a href="#" className="auth-footer-link">
-              Need help?
-            </a>
+            <Link to="/" className="auth-footer-link">
+              Back to home
+            </Link>
           </div>
         </form>
       </section>

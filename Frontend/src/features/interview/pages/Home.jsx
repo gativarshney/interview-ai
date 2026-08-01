@@ -203,26 +203,30 @@ const Home = () => {
                 </h1>
 
                 <p className='emotional-subheadline-copy'>
-                    Paste a job description, upload your resume, and get a full interview strategy in 30 seconds — tailored questions, skill gap analysis, and a day-by-day prep roadmap.
+                    Paste a job description and upload your resume. You will get role-specific questions, your skill gaps ranked by severity, and a day-by-day prep plan in about 30 seconds.
                 </p>
 
-                {/* North Star Metric Card */}
-                <div className='north-star-metrics-container'>
-                    <div className='metric-pill-item'>
-                        <span className='metric-number-val'>94.2%</span>
-                        <span className='metric-desc-label'>Candidate Success Rate</span>
+                {/* Your own numbers — no invented platform-wide statistics. */}
+                {reports.length > 0 && (
+                    <div className='north-star-metrics-container'>
+                        <div className='metric-pill-item'>
+                            <span className='metric-number-val'>{reports.length}</span>
+                            <span className='metric-desc-label'>{reports.length === 1 ? 'Plan Generated' : 'Plans Generated'}</span>
+                        </div>
+                        <div className='metrics-vertical-separator' />
+                        <div className='metric-pill-item'>
+                            <span className='metric-number-val'>{reports[0].matchScore}%</span>
+                            <span className='metric-desc-label'>Latest Match Score</span>
+                        </div>
+                        <div className='metrics-vertical-separator' />
+                        <div className='metric-pill-item'>
+                            <span className='metric-number-val'>
+                                {Math.max(...reports.map((r) => r.matchScore || 0))}%
+                            </span>
+                            <span className='metric-desc-label'>Best Match So Far</span>
+                        </div>
                     </div>
-                    <div className='metrics-vertical-separator' />
-                    <div className='metric-pill-item'>
-                        <span className='metric-number-val'>4.8x</span>
-                        <span className='metric-desc-label'>Interview Offer Rate</span>
-                    </div>
-                    <div className='metrics-vertical-separator' />
-                    <div className='metric-pill-item'>
-                        <span className='metric-number-val'>+42%</span>
-                        <span className='metric-desc-label'>Avg Salary Hike</span>
-                    </div>
-                </div>
+                )}
             </header>
 
             {/* Centered & Wide macOS Preview Workspace (No longer in sidebar split) */}
@@ -454,11 +458,14 @@ const Home = () => {
             {/* Premium Immersive Page Footer */}
             <footer className='premium-page-footer-links'>
                 <div className='footer-links-row'>
-                    <a href='#' className='footer-link-item'>Privacy Policy</a>
-                    <span className='footer-links-bullet'>&bull;</span>
-                    <a href='#' className='footer-link-item'>Terms of Service</a>
-                    <span className='footer-links-bullet'>&bull;</span>
-                    <a href='#' className='footer-link-item'>Help Center</a>
+                    <a
+                        href='https://github.com/gativarshney/interview-ai'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='footer-link-item'
+                    >
+                        Source on GitHub
+                    </a>
                 </div>
                 <p className='footer-copyright-text'>&copy; {new Date().getFullYear()} Interview Copilot. All rights reserved.</p>
             </footer>
