@@ -1,0 +1,206 @@
+/*
+  Explicit cascade-layer order, declared before Tailwind so it wins.
+
+  The legacy SCSS sits between Tailwind's `base` and `utilities`, which is the
+  only position that works during the rebuild:
+    - after `base`, so Tailwind's preflight cannot reset the old pages
+    - before `utilities`, so Tailwind utilities beat old rules on new pages
+
+  Without this the legacy stylesheet is unlayered, and unlayered CSS beats every
+  layer regardless of specificity — which silently disabled all of Tailwind.
+  The `legacy` layer disappears with style.scss in UI-7.
+*/
+@layer theme, base, legacy, components, utilities;
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Token values are taken from the reference set this redesign targets
+  (v0.app / Vercel's Geist language):
+    - pure black base, near-white foreground (never pure white)
+    - hairline borders as white at ~14.5% alpha, not solid grey
+    - 8px as the dominant radius
+    - no shadows, no gradient surfaces, no glow
+    - a single accent, used only on primary actions and focus rings
+*/
+:root {
+  --radius: 0.5rem; /* 8px */
+
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.946 0 0);
+
+  /* Raised surfaces read as elevation through border, not shadow. */
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.946 0 0);
+  --popover: oklch(0.165 0 0);
+  --popover-foreground: oklch(0.946 0 0);
+
+  /* Primary is near-white on black, the way v0 and Vercel do it. */
+  --primary: oklch(0.946 0 0);
+  --primary-foreground: oklch(0.145 0 0);
+
+  --secondary: oklch(0.205 0 0);
+  --secondary-foreground: oklch(0.946 0 0);
+
+  --muted: oklch(0.205 0 0);
+  --muted-foreground: oklch(0.706 0 0);
+
+  --accent: oklch(0.205 0 0);
+  --accent-foreground: oklch(0.946 0 0);
+
+  --destructive: oklch(0.62 0.19 25.8);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(1 0 0 / 0.145);
+  --input: oklch(1 0 0 / 0.145);
+  --ring: oklch(0.646 0.222 12.5);
+
+  /* Brand mark only. Deliberately not used for large fills. */
+  --brand: oklch(0.646 0.222 12.5);
+
+  /* Severity scale for skill gaps — functional colour, not decoration. */
+  --severity-high: oklch(0.637 0.208 25.3);
+  --severity-medium: oklch(0.769 0.157 70.1);
+  --severity-low: oklch(0.723 0.163 156.2);
+
+  --chart-1: oklch(0.646 0.222 12.5);
+  --chart-2: oklch(0.6 0.118 184.7);
+  --chart-3: oklch(0.769 0.157 70.1);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.723 0.163 156.2);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+
+  --color-severity-high: var(--severity-high);
+  --color-severity-medium: var(--severity-medium);
+  --color-severity-low: var(--severity-low);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+
+  --font-sans: Geist, Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    font-variation-settings: "opsz" 32;
+  }
+
+  /*
+    Tight negative tracking on headings is the single biggest reason the
+    reference sites read as "designed". Measured: -0.04em on v0, -0.025em on
+    usemotion. It scales with size, so it is set per level.
+  */
+  h1 {
+    @apply font-semibold tracking-[-0.04em];
+  }
+  h2 {
+    @apply font-semibold tracking-[-0.03em];
+  }
+  h3,
+  h4 {
+    @apply font-semibold tracking-[-0.02em];
+  }
+
+  /* One consistent focus treatment everywhere, keyboard only. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring/60 ring-offset-2 ring-offset-background;
+  }
+
+  ::selection {
+    @apply bg-foreground/15;
+  }
+
+  /* Restrained scrollbars so panels do not get a chunky OS bar through them. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: color-mix(in oklch, var(--foreground) 18%, transparent);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--foreground) 28%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /*
+    A single hairline grid, used sparingly as a page backdrop. Replaces the
+    stack of blurred radial "mesh glow" divs the old design layered on
+    every page.
+  */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  }
+}

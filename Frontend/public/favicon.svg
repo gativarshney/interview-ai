@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    Mark: a document with an upward step-chart cut into it — the resume, and
+    the improvement it gets. Solid shapes only and nothing thinner than 2.5px,
+    so it stays legible at 16px where thin strokes disappear.
+  -->
+  <rect width="32" height="32" rx="7" fill="#000"/>
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="none" stroke="#fff" stroke-opacity="0.16"/>
+  <path d="M11 7h7.2L23 11.8V25a1 1 0 0 1-1 1H11a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="#fff" fill-opacity="0.13"/>
+  <path d="M18 7l5 4.8h-4a1 1 0 0 1-1-1V7Z" fill="#fff" fill-opacity="0.3"/>
+  <g fill="#fff">
+    <rect x="13" y="19" width="2.6" height="3.6" rx="0.9"/>
+    <rect x="17" y="16.4" width="2.6" height="6.2" rx="0.9"/>
+  </g>
+  <path d="M13.6 15.2l3-3 2.2 2.2 3.4-3.6" fill="none" stroke="#ff2d78" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
